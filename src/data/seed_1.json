@@ -1,0 +1,1407 @@
+{
+  "version": 1,
+  "deckName": "AWS CLF-C02 - Seed",
+  "cards": [
+    {
+      "id": "5d93qohf4w",
+      "front": "CLF-C02: ¿Cuántas preguntas con puntaje tiene el examen?",
+      "back": "50 preguntas afectan la puntuación; además hay 15 sin puntaje.",
+      "tags": [
+        "exam",
+        "clp"
+      ],
+      "domain": "Meta"
+    },
+    {
+      "id": "ubc5wmpzt2",
+      "front": "CLF-C02: ¿Puntaje mínimo para aprobar?",
+      "back": "700 (escala 100–1000).",
+      "tags": [
+        "exam",
+        "clp"
+      ],
+      "domain": "Meta"
+    },
+    {
+      "id": "msqyds6pag",
+      "front": "CLF-C02: Dominios y ponderación",
+      "back": "D1 Conceptos 24% • D2 Seguridad 30% • D3 Tecnología 34% • D4 Facturación/Precios/Soporte 12%.",
+      "tags": [
+        "exam",
+        "domains"
+      ],
+      "domain": "Meta"
+    },
+    {
+      "id": "0rnyd35w1o",
+      "front": "Well-Architected: ¿Qué cubre el pilar 'Excelencia operativa'?",
+      "back": "Ejecutar/monitorear sistemas y mejorar procesos continuamente.",
+      "tags": [
+        "well-architected"
+      ],
+      "domain": "D1"
+    },
+    {
+      "id": "f6u4qfwxk6",
+      "front": "Well-Architected: ¿Qué cubre el pilar 'Seguridad'?",
+      "back": "Proteger datos/sistemas; controlar identidades, permisos y cifrado.",
+      "tags": [
+        "well-architected"
+      ],
+      "domain": "D1"
+    },
+    {
+      "id": "ybw5tq3oub",
+      "front": "Well-Architected: ¿Qué cubre el pilar 'Fiabilidad'?",
+      "back": "Recuperarse ante fallas y manejar cambios sin degradar el servicio.",
+      "tags": [
+        "well-architected"
+      ],
+      "domain": "D1"
+    },
+    {
+      "id": "8zkmz0l7e0",
+      "front": "Well-Architected: ¿Qué cubre el pilar 'Eficiencia del rendimiento'?",
+      "back": "Usar recursos apropiados para cumplir requisitos de performance.",
+      "tags": [
+        "well-architected"
+      ],
+      "domain": "D1"
+    },
+    {
+      "id": "1d7ogtkbik",
+      "front": "Well-Architected: ¿Qué cubre el pilar 'Optimización de costos'?",
+      "back": "Evitar gasto innecesario y elegir modelos de consumo adecuados.",
+      "tags": [
+        "well-architected"
+      ],
+      "domain": "D1"
+    },
+    {
+      "id": "91ko6chr0p",
+      "front": "Well-Architected: ¿Qué cubre el pilar 'Sostenibilidad'?",
+      "back": "Reducir impacto ambiental optimizando recursos y eficiencia.",
+      "tags": [
+        "well-architected"
+      ],
+      "domain": "D1"
+    },
+    {
+      "id": "8jpky42fy1",
+      "front": "Modelo de responsabilidad compartida: 'seguridad DE la nube'",
+      "back": "AWS protege infraestructura física y servicios subyacentes (DC, HW, red, virtualización).",
+      "tags": [
+        "security",
+        "shared-responsibility"
+      ],
+      "domain": "D2"
+    },
+    {
+      "id": "o4pmuh2nnr",
+      "front": "Modelo de responsabilidad compartida: 'seguridad EN la nube'",
+      "back": "El cliente configura identidades, permisos, datos, cifrado y controles dentro de AWS.",
+      "tags": [
+        "security",
+        "shared-responsibility"
+      ],
+      "domain": "D2"
+    },
+    {
+      "id": "rsmbkta5ll",
+      "front": "Responsabilidad: EC2 vs RDS vs Lambda (regla general)",
+      "back": "Más administrado = más responsabilidad de AWS en SO/plataforma; el cliente siempre es responsable de datos y acceso.",
+      "tags": [
+        "security",
+        "shared-responsibility"
+      ],
+      "domain": "D2"
+    },
+    {
+      "id": "r80vephqhj",
+      "front": "IAM: ¿Qué gestiona?",
+      "back": "Identidades (usuarios/roles) y permisos (políticas) para recursos AWS.",
+      "tags": [
+        "iam",
+        "security"
+      ],
+      "domain": "D2"
+    },
+    {
+      "id": "o5ih07tlme",
+      "front": "IAM: principio de mínimo privilegio",
+      "back": "Conceder solo permisos necesarios para una tarea concreta.",
+      "tags": [
+        "iam",
+        "security"
+      ],
+      "domain": "D2"
+    },
+    {
+      "id": "0z8i6iok0r",
+      "front": "Usuario raíz: buenas prácticas",
+      "back": "No usar a diario; habilitar MFA; evitar/rotar access keys; guardar credenciales.",
+      "tags": [
+        "iam",
+        "security"
+      ],
+      "domain": "D2"
+    },
+    {
+      "id": "gudnhw9nji",
+      "front": "Rol IAM: idea",
+      "back": "Identidad asumible con credenciales temporales (STS) para usuarios/servicios.",
+      "tags": [
+        "iam",
+        "security"
+      ],
+      "domain": "D2"
+    },
+    {
+      "id": "oid38as11d",
+      "front": "Evaluación de políticas: Deny explícito",
+      "back": "Un Deny explícito gana sobre cualquier Allow.",
+      "tags": [
+        "iam",
+        "security"
+      ],
+      "domain": "D2"
+    },
+    {
+      "id": "napj4lzote",
+      "front": "IAM Identity Center (SSO): idea",
+      "back": "Inicio de sesión centralizado y asignación de acceso a cuentas y apps.",
+      "tags": [
+        "iam",
+        "security"
+      ],
+      "domain": "D2"
+    },
+    {
+      "id": "0few33gaxq",
+      "front": "Secrets Manager vs Parameter Store",
+      "back": "Secrets: gestión/rotación de secretos; Parameter Store: parámetros/config con opciones de seguridad.",
+      "tags": [
+        "iam",
+        "security"
+      ],
+      "domain": "D2"
+    },
+    {
+      "id": "bwr9qcsx43",
+      "front": "EC2: ¿Qué es?",
+      "back": "Máquinas virtuales (instancias) elásticas para ejecutar software con control del SO.",
+      "tags": [
+        "ec2",
+        "compute"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "5h8kltwy55",
+      "front": "Lambda: ¿Qué es?",
+      "back": "Funciones serverless disparadas por eventos; pagas por invocaciones y duración.",
+      "tags": [
+        "lambda",
+        "serverless"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "67c79zdbod",
+      "front": "ECS: ¿Qué es?",
+      "back": "Orquestación administrada de contenedores (tasks/services) nativa de AWS.",
+      "tags": [
+        "ecs",
+        "containers"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "ezm2fok9a0",
+      "front": "EKS: ¿Qué es?",
+      "back": "Kubernetes administrado (control plane gestionado por AWS).",
+      "tags": [
+        "eks",
+        "containers"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "ljm013qs64",
+      "front": "Fargate: ¿Para qué sirve?",
+      "back": "Ejecutar contenedores sin administrar instancias EC2 (ECS/EKS).",
+      "tags": [
+        "fargate",
+        "containers"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "pde91mjiad",
+      "front": "S3: ¿Qué tipo de almacenamiento es?",
+      "back": "Almacenamiento de objetos (bucket/objetos) accesible vía API/HTTP.",
+      "tags": [
+        "s3",
+        "storage"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "lbpx4ai8m6",
+      "front": "EBS: ¿Qué es?",
+      "back": "Almacenamiento en bloques persistente para EC2 (volúmenes).",
+      "tags": [
+        "ebs",
+        "storage"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "o3i7nw4ea6",
+      "front": "Instance Store: ¿Qué es?",
+      "back": "Almacenamiento en bloques efímero ligado al host de EC2.",
+      "tags": [
+        "storage"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "65kuphbaya",
+      "front": "EFS: ¿Qué es?",
+      "back": "Sistema de archivos NFS administrado, montable por múltiples instancias.",
+      "tags": [
+        "efs",
+        "storage"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "j8xkdt3g7a",
+      "front": "FSx: ¿Qué resuelve?",
+      "back": "Sistemas de archivos administrados (Windows SMB, Lustre, etc.).",
+      "tags": [
+        "fsx",
+        "storage"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "owditz054t",
+      "front": "RDS: ¿Qué es?",
+      "back": "Bases relacionales administradas (parches, backups, HA según config).",
+      "tags": [
+        "rds",
+        "database"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "b34u0dc964",
+      "front": "Aurora: posicionamiento",
+      "back": "Motor relacional cloud-native compatible MySQL/PostgreSQL, optimizado para AWS.",
+      "tags": [
+        "aurora",
+        "database"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "fr81sgmbry",
+      "front": "DynamoDB: ¿Qué es?",
+      "back": "Base NoSQL clave-valor/documento con baja latencia y escalado administrado.",
+      "tags": [
+        "dynamodb",
+        "database"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "bsts1ai9bz",
+      "front": "VPC: ¿Qué es?",
+      "back": "Red virtual aislada donde defines subredes, rutas y controles.",
+      "tags": [
+        "vpc",
+        "network"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "wtqj7i0xk6",
+      "front": "Security Group: ¿Qué es?",
+      "back": "Firewall stateful a nivel de instancia/ENI (reglas allow).",
+      "tags": [
+        "network",
+        "security"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "qucowoapiz",
+      "front": "NACL: ¿Qué es?",
+      "back": "Firewall stateless a nivel de subred (allow/deny).",
+      "tags": [
+        "network",
+        "security"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "6t7iciiu1l",
+      "front": "Route 53: propósito",
+      "back": "DNS administrado; enruta tráfico por nombres de dominio.",
+      "tags": [
+        "route53",
+        "network"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "7zmg4wuct8",
+      "front": "CloudFront: propósito",
+      "back": "CDN en edge locations para entregar contenido con baja latencia.",
+      "tags": [
+        "cloudfront",
+        "network"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "4zalcblw2s",
+      "front": "Global Accelerator: idea",
+      "back": "Mejora performance global usando red AWS y endpoints anycast.",
+      "tags": [
+        "network"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "8mkky4jw22",
+      "front": "CloudWatch: ¿para qué sirve?",
+      "back": "Métricas, logs, dashboards y alarmas.",
+      "tags": [
+        "cloudwatch",
+        "observability"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "3z7bom2ja8",
+      "front": "CloudTrail: ¿para qué sirve?",
+      "back": "Auditoría de llamadas a APIs (quién, qué, cuándo, desde dónde).",
+      "tags": [
+        "cloudtrail",
+        "governance"
+      ],
+      "domain": "D2"
+    },
+    {
+      "id": "jm75zzmuii",
+      "front": "AWS Config: ¿para qué sirve?",
+      "back": "Inventario y evaluación de configuración; compliance y cambios.",
+      "tags": [
+        "config",
+        "governance"
+      ],
+      "domain": "D2"
+    },
+    {
+      "id": "yqeta8dxym",
+      "front": "Trusted Advisor: ¿qué entrega?",
+      "back": "Recomendaciones de costos/seguridad/performance y límites.",
+      "tags": [
+        "trusted-advisor",
+        "cost"
+      ],
+      "domain": "D4"
+    },
+    {
+      "id": "g9n61smcwe",
+      "front": "AWS Artifact: ¿qué es?",
+      "back": "Portal de reportes de cumplimiento y acuerdos.",
+      "tags": [
+        "artifact",
+        "compliance"
+      ],
+      "domain": "D2"
+    },
+    {
+      "id": "th1q31qqc4",
+      "front": "KMS: ¿qué resuelve?",
+      "back": "Gestión de claves para cifrado e integración con servicios.",
+      "tags": [
+        "kms",
+        "security"
+      ],
+      "domain": "D2"
+    },
+    {
+      "id": "siamw18ocp",
+      "front": "WAF: ¿qué protege?",
+      "back": "Firewall L7 para apps web (SQLi, XSS, etc.).",
+      "tags": [
+        "waf",
+        "security"
+      ],
+      "domain": "D2"
+    },
+    {
+      "id": "snq30rvbz5",
+      "front": "Shield: ¿qué protege?",
+      "back": "Protección contra DDoS (Standard/Advanced).",
+      "tags": [
+        "shield",
+        "security"
+      ],
+      "domain": "D2"
+    },
+    {
+      "id": "6ougmtksl8",
+      "front": "GuardDuty: ¿qué hace?",
+      "back": "Detección administrada de amenazas con señales de logs/flow/DNS.",
+      "tags": [
+        "guardduty",
+        "security"
+      ],
+      "domain": "D2"
+    },
+    {
+      "id": "zh8tzndg3o",
+      "front": "Inspector: ¿qué hace?",
+      "back": "Evaluación de vulnerabilidades en workloads.",
+      "tags": [
+        "inspector",
+        "security"
+      ],
+      "domain": "D2"
+    },
+    {
+      "id": "fqfrm0yclu",
+      "front": "Security Hub: ¿qué hace?",
+      "back": "Centraliza y agrega hallazgos/controles de seguridad.",
+      "tags": [
+        "security-hub",
+        "security"
+      ],
+      "domain": "D2"
+    },
+    {
+      "id": "r36dcfpe67",
+      "front": "Modelo de precios AWS (idea base)",
+      "back": "Pago por uso; costos variables según consumo (cómputo, storage, transferencia).",
+      "tags": [
+        "billing",
+        "cost"
+      ],
+      "domain": "D4"
+    },
+    {
+      "id": "ebg4myeefr",
+      "front": "On-Demand: ¿cuándo usar?",
+      "back": "Carga impredecible o de corta duración; sin compromiso.",
+      "tags": [
+        "billing",
+        "cost"
+      ],
+      "domain": "D4"
+    },
+    {
+      "id": "la47qmkj29",
+      "front": "Reserved Instances / Savings Plans: ¿cuándo usar?",
+      "back": "Uso estable a largo plazo; descuento por compromiso.",
+      "tags": [
+        "billing",
+        "cost"
+      ],
+      "domain": "D4"
+    },
+    {
+      "id": "47drlakfo4",
+      "front": "Spot: ¿cuándo usar?",
+      "back": "Cargas tolerantes a interrupciones; gran descuento.",
+      "tags": [
+        "billing",
+        "cost"
+      ],
+      "domain": "D4"
+    },
+    {
+      "id": "6tpj93aafg",
+      "front": "Transferencia de datos: regla mental",
+      "back": "Entrante suele ser gratis; saliente y entre regiones suele costar (según caso).",
+      "tags": [
+        "billing",
+        "cost"
+      ],
+      "domain": "D4"
+    },
+    {
+      "id": "ebgfjb4szi",
+      "front": "AWS Pricing Calculator: ¿para qué sirve?",
+      "back": "Estimar costos antes de desplegar.",
+      "tags": [
+        "billing",
+        "cost"
+      ],
+      "domain": "D4"
+    },
+    {
+      "id": "ae4d8h6vv7",
+      "front": "AWS Budgets: ¿para qué sirve?",
+      "back": "Alertas y límites presupuestarios por costo/uso.",
+      "tags": [
+        "billing",
+        "cost"
+      ],
+      "domain": "D4"
+    },
+    {
+      "id": "ykmge95jzt",
+      "front": "Cost Explorer: ¿para qué sirve?",
+      "back": "Analizar gasto histórico y tendencias.",
+      "tags": [
+        "billing",
+        "cost"
+      ],
+      "domain": "D4"
+    },
+    {
+      "id": "2trkvdsrgw",
+      "front": "Etiquetas de asignación de costos: propósito",
+      "back": "Atribuir costos a equipos/proyectos/entornos en reportes.",
+      "tags": [
+        "billing",
+        "cost"
+      ],
+      "domain": "D4"
+    },
+    {
+      "id": "jv3gesuwv0",
+      "front": "Planes de AWS Support: idea",
+      "back": "Planes con distintos SLAs y canales; escalan desde básico a enterprise.",
+      "tags": [
+        "billing",
+        "cost"
+      ],
+      "domain": "D4"
+    },
+    {
+      "id": "e9jruqlvy4",
+      "front": "AWS CAF: ¿para qué sirve?",
+      "back": "Marco para planificar adopción/migración, reduciendo riesgo y alineando organización.",
+      "tags": [
+        "migration"
+      ],
+      "domain": "D1"
+    },
+    {
+      "id": "ormgebexgg",
+      "front": "Estrategias de migración (7R)",
+      "back": "Rehost, Replatform, Refactor, Repurchase, Retire, Retain, Relocate.",
+      "tags": [
+        "migration"
+      ],
+      "domain": "D1"
+    },
+    {
+      "id": "78ovch2cai",
+      "front": "AWS Snow Family: uso típico",
+      "back": "Transferir datos grandes/offline cuando red es lenta o volumen es alto.",
+      "tags": [
+        "migration"
+      ],
+      "domain": "D1"
+    },
+    {
+      "id": "vq676aoaxn",
+      "front": "DMS: ¿para qué sirve?",
+      "back": "Migrar/replicar bases de datos con mínima interrupción.",
+      "tags": [
+        "migration"
+      ],
+      "domain": "D1"
+    },
+    {
+      "id": "v4b66wn26u",
+      "front": "SCT: ¿para qué sirve?",
+      "back": "Convertir esquemas/código de BD al motor objetivo.",
+      "tags": [
+        "migration"
+      ],
+      "domain": "D1"
+    },
+    {
+      "id": "27q28mrpz7",
+      "front": "SQS: patrón",
+      "back": "Cola para desacoplar productores/consumidores y absorber picos.",
+      "tags": [
+        "services"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "edez3p8szi",
+      "front": "SNS: patrón",
+      "back": "Pub/Sub para fanout de notificaciones a múltiples suscriptores.",
+      "tags": [
+        "services"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "9k67mh4bjr",
+      "front": "EventBridge: patrón",
+      "back": "Bus de eventos para integrar servicios con reglas de enrutamiento.",
+      "tags": [
+        "services"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "8c7nr7rev3",
+      "front": "Step Functions: uso",
+      "back": "Orquestar workflows de varios pasos entre servicios.",
+      "tags": [
+        "services"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "lni2zbwl3z",
+      "front": "Athena: uso",
+      "back": "Consultas SQL sobre datos en S3 (serverless).",
+      "tags": [
+        "services"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "datavt9co4",
+      "front": "Glue: uso",
+      "back": "ETL administrado y catálogo de datos.",
+      "tags": [
+        "services"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "ldiidokios",
+      "front": "Kinesis: uso",
+      "back": "Ingesta/procesamiento de datos en streaming.",
+      "tags": [
+        "services"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "m023pq9cev",
+      "front": "QuickSight: uso",
+      "back": "BI/visualización de datos administrada.",
+      "tags": [
+        "services"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "2bdyd7zgq1",
+      "front": "SageMaker: uso",
+      "back": "Construir/entrenar/desplegar modelos ML.",
+      "tags": [
+        "services"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "9u5a9a8zrq",
+      "front": "X-Ray: uso",
+      "back": "Trazas distribuidas para latencia/errores en microservicios.",
+      "tags": [
+        "services"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "nknsnep86q",
+      "front": "CloudFormation: ¿qué es?",
+      "back": "Infraestructura como código para crear recursos repetibles.",
+      "tags": [
+        "services"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "ue455k4z7j",
+      "front": "Systems Manager: ¿qué agrupa?",
+      "back": "Gestión operativa (inventario, patching, run command, parámetros).",
+      "tags": [
+        "services"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "iorod9175w",
+      "front": "Organizations: ¿para qué sirve?",
+      "back": "Gestión multi-cuenta, facturación unificada y gobernanza.",
+      "tags": [
+        "services"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "ef97gkq6uj",
+      "front": "Control Tower: idea",
+      "back": "Landing zone multi-cuenta con guardrails.",
+      "tags": [
+        "services"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "i4d0ppm54f",
+      "front": "Quieres detectar amenazas a partir de señales de logs.",
+      "back": "Amazon GuardDuty.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "u71o261xk7",
+      "front": "Quieres Kubernetes administrado.",
+      "back": "Amazon EKS.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "mv9sc5gc8w",
+      "front": "Quieres CDN y caching en edge.",
+      "back": "Amazon CloudFront.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "v5mf4ttk0y",
+      "front": "Quieres estimar costos antes de desplegar.",
+      "back": "AWS Pricing Calculator.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "9hzu64r2qn",
+      "front": "Quieres DNS administrado para tu dominio.",
+      "back": "Amazon Route 53.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "j438ky7gt8",
+      "front": "Quieres notificar a múltiples destinos.",
+      "back": "Amazon SNS.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "nnxdinyk0j",
+      "front": "Quieres estimar costos antes de desplegar.",
+      "back": "AWS Pricing Calculator.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "gu63xqyvlh",
+      "front": "Necesitas base relacional administrada (MySQL/PostgreSQL).",
+      "back": "Amazon RDS (o Aurora).",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "yj249pzuku",
+      "front": "Quieres DNS administrado para tu dominio.",
+      "back": "Amazon Route 53.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "5hujx524dx",
+      "front": "Quieres balancear TCP/UDP y conservar IP de origen.",
+      "back": "Network Load Balancer (NLB).",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "xkjutyqkig",
+      "front": "Quieres orquestar un workflow con estados.",
+      "back": "AWS Step Functions.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "mkro4j7poa",
+      "front": "Necesitas almacenamiento efímero rápido para datos temporales.",
+      "back": "EC2 Instance Store.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "d3jwphno4n",
+      "front": "Quieres proteger una app web contra SQLi/XSS.",
+      "back": "AWS WAF.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "bt5z6ztmky",
+      "front": "Quieres análisis de gasto histórico.",
+      "back": "AWS Cost Explorer.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "2wfm0mhyve",
+      "front": "Quieres orquestar un workflow con estados.",
+      "back": "AWS Step Functions.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "9o9ss7eccu",
+      "front": "Quieres publicar infraestructura repetible.",
+      "back": "AWS CloudFormation.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "60wq3m1or4",
+      "front": "Quieres Kubernetes administrado.",
+      "back": "Amazon EKS.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "l49rt4jz8g",
+      "front": "Quieres proteger una app web contra SQLi/XSS.",
+      "back": "AWS WAF.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "r39pdcmr62",
+      "front": "Quieres alertas cuando se supere un presupuesto.",
+      "back": "AWS Budgets.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "87bmmdxesi",
+      "front": "Quieres notificar a múltiples destinos.",
+      "back": "Amazon SNS.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "xd49l1iodv",
+      "front": "Quieres CDN y caching en edge.",
+      "back": "Amazon CloudFront.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "5e4kidl4x0",
+      "front": "Quieres proteger una app web contra SQLi/XSS.",
+      "back": "AWS WAF.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "9qlsud83bi",
+      "front": "Quieres orquestar un workflow con estados.",
+      "back": "AWS Step Functions.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "mju56iy29g",
+      "front": "Quieres DNS administrado para tu dominio.",
+      "back": "Amazon Route 53.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "a7giq64bxv",
+      "front": "Quieres cola para desacoplar un webhook de un backend.",
+      "back": "Amazon SQS.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "b2no0k1d4a",
+      "front": "Necesitas disco persistente para EC2 con baja latencia.",
+      "back": "Amazon EBS.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "8jm0yxxlh5",
+      "front": "Quieres monitorear métricas y alarmas de recursos.",
+      "back": "Amazon CloudWatch.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "p8ickeb3td",
+      "front": "Necesitas NoSQL con baja latencia y escalado automático.",
+      "back": "Amazon DynamoDB.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "7hd87lszwe",
+      "front": "Quieres notificar a múltiples destinos.",
+      "back": "Amazon SNS.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "f005fc5h6h",
+      "front": "Quieres ejecutar contenedores sin administrar servidores.",
+      "back": "AWS Fargate (con ECS/EKS).",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "7cz8g96mjg",
+      "front": "Quieres Kubernetes administrado.",
+      "back": "Amazon EKS.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "bsn7pdfawr",
+      "front": "Necesitas disco persistente para EC2 con baja latencia.",
+      "back": "Amazon EBS.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "mitub5h3cy",
+      "front": "Quieres monitorear métricas y alarmas de recursos.",
+      "back": "Amazon CloudWatch.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "530ra460t5",
+      "front": "Quieres ejecutar contenedores sin administrar servidores.",
+      "back": "AWS Fargate (con ECS/EKS).",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "aimbwh3o42",
+      "front": "Quieres cola para desacoplar un webhook de un backend.",
+      "back": "Amazon SQS.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "5tqqj7pebg",
+      "front": "Necesitas base relacional administrada (MySQL/PostgreSQL).",
+      "back": "Amazon RDS (o Aurora).",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "y0h3vpmjvc",
+      "front": "Quieres cifrado gestionado por claves.",
+      "back": "AWS KMS.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "w0lgpgtgp2",
+      "front": "Quieres alertas cuando se supere un presupuesto.",
+      "back": "AWS Budgets.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "wmlmxg0exn",
+      "front": "Necesitas base relacional administrada (MySQL/PostgreSQL).",
+      "back": "Amazon RDS (o Aurora).",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "9ha45iibuq",
+      "front": "Necesitas almacenamiento efímero rápido para datos temporales.",
+      "back": "EC2 Instance Store.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "wdf2d9zdow",
+      "front": "Quieres alertas cuando se supere un presupuesto.",
+      "back": "AWS Budgets.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "57t5xj3ccu",
+      "front": "Necesitas almacenamiento efímero rápido para datos temporales.",
+      "back": "EC2 Instance Store.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "mzjppzuqhj",
+      "front": "Quieres balancear TCP/UDP y conservar IP de origen.",
+      "back": "Network Load Balancer (NLB).",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "t9agcupvbl",
+      "front": "Quieres controlar permisos de usuarios y roles.",
+      "back": "AWS IAM.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "acpy8l801c",
+      "front": "Quieres balancear TCP/UDP y conservar IP de origen.",
+      "back": "Network Load Balancer (NLB).",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "ljinzwy2rd",
+      "front": "Quieres monitorear métricas y alarmas de recursos.",
+      "back": "Amazon CloudWatch.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "07z5y259w8",
+      "front": "Quieres análisis de gasto histórico.",
+      "back": "AWS Cost Explorer.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "66eql0zr5j",
+      "front": "Quieres alertas cuando se supere un presupuesto.",
+      "back": "AWS Budgets.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "w2jxlv5eaa",
+      "front": "Quieres estimar costos antes de desplegar.",
+      "back": "AWS Pricing Calculator.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "d6egbjogas",
+      "front": "Quieres estimar costos antes de desplegar.",
+      "back": "AWS Pricing Calculator.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "y7zta1scc9",
+      "front": "Quieres balancear TCP/UDP y conservar IP de origen.",
+      "back": "Network Load Balancer (NLB).",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "388cltb5mh",
+      "front": "Quieres ejecutar contenedores sin administrar servidores.",
+      "back": "AWS Fargate (con ECS/EKS).",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "6lkehg0nz8",
+      "front": "Necesitas hosting de sitio estático (HTML/CSS/JS) de bajo costo.",
+      "back": "Amazon S3 (sitio estático) + CloudFront si necesitas CDN.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "bovbzssvxe",
+      "front": "Quieres Kubernetes administrado.",
+      "back": "Amazon EKS.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "2jv9n3hx7l",
+      "front": "Quieres CDN y caching en edge.",
+      "back": "Amazon CloudFront.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "6ojptse5tf",
+      "front": "Quieres DNS administrado para tu dominio.",
+      "back": "Amazon Route 53.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "mwycedjgix",
+      "front": "Quieres análisis de gasto histórico.",
+      "back": "AWS Cost Explorer.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "0hyzqbnd73",
+      "front": "Quieres Kubernetes administrado.",
+      "back": "Amazon EKS.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "mlbqnddxd9",
+      "front": "Quieres cifrado gestionado por claves.",
+      "back": "AWS KMS.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "ovg1k7f74j",
+      "front": "Quieres cola para desacoplar un webhook de un backend.",
+      "back": "Amazon SQS.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "gg3ldnlbym",
+      "front": "Quieres controlar permisos de usuarios y roles.",
+      "back": "AWS IAM.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "qn2zpyqf6l",
+      "front": "Quieres controlar permisos de usuarios y roles.",
+      "back": "AWS IAM.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "hlsv19elxx",
+      "front": "Quieres alertas cuando se supere un presupuesto.",
+      "back": "AWS Budgets.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "bennie4yzt",
+      "front": "Quieres auditoría de llamadas a APIs (quién hizo qué).",
+      "back": "AWS CloudTrail.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "x85x9j40im",
+      "front": "Quieres alertas cuando se supere un presupuesto.",
+      "back": "AWS Budgets.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "opgsbjgbwt",
+      "front": "Quieres orquestar un workflow con estados.",
+      "back": "AWS Step Functions.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "6tcbuloq2d",
+      "front": "Quieres DNS administrado para tu dominio.",
+      "back": "Amazon Route 53.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "y05fvh2jux",
+      "front": "Necesitas base relacional administrada (MySQL/PostgreSQL).",
+      "back": "Amazon RDS (o Aurora).",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "3emomurddd",
+      "front": "Necesitas base relacional administrada (MySQL/PostgreSQL).",
+      "back": "Amazon RDS (o Aurora).",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "r9lzw4cv1b",
+      "front": "Quieres alertas cuando se supere un presupuesto.",
+      "back": "AWS Budgets.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "6d1vqdnxlq",
+      "front": "Quieres alertas cuando se supere un presupuesto.",
+      "back": "AWS Budgets.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "j0dnstc9vo",
+      "front": "Quieres cola para desacoplar un webhook de un backend.",
+      "back": "Amazon SQS.",
+      "tags": [
+        "scenario"
+      ],
+      "domain": "D3"
+    }
+  ]
+}
