@@ -18,16 +18,50 @@ export const addDays = (epochMs: number, days: number) => {
   return epochMs + days * 24 * 60 * 60 * 1000;
 };
 
+export const isValidGrade = (value: unknown): value is Grade => {
+  return value === 1 || value === 2 || value === 3;
+};
+
+export const isValidSRSData = (value: unknown): value is SRSData => {
+  if (typeof value !== 'object' || value === null) {
+    return false;
+  }
+
+  const candidate = value as Partial<SRSData>;
+
+  return (
+    typeof candidate.box === 'number' &&
+    candidate.box >= 1 &&
+    candidate.box <= 5 &&
+    typeof candidate.nextDue === 'number' &&
+    Number.isFinite(candidate.nextDue) &&
+    typeof candidate.streak === 'number' &&
+    candidate.streak >= 0 &&
+    typeof candidate.lastGrade === 'number' &&
+    (candidate.lastGrade === 0 || isValidGrade(candidate.lastGrade))
+  );
+};
+
+export const generateCardId = () => {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID();
+  }
+
+  return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
+};
+
 export const ensureSRS = (card: Partial<Flashcard>): Flashcard => {
-  const srs: SRSData = card.srs || {
-    box: 1,
-    nextDue: nowDay(),
-    streak: 0,
-    lastGrade: 0,
-  };
+  const srs: SRSData = isValidSRSData(card.srs)
+    ? card.srs
+    : {
+        box: 1,
+        nextDue: nowDay(),
+        streak: 0,
+        lastGrade: 0,
+      };
 
   return {
-    id: card.id || Math.random().toString(36).slice(2, 12),
+    id: card.id || generateCardId(),
     front: card.front || '',
     back: card.back || '',
     tags: card.tags || [],

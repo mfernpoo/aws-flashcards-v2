@@ -1,87 +1,52 @@
-import React, { useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
+import { ConfirmDialog } from './components/ConfirmDialog';
 import { Sidebar } from './components/Sidebar';
-import { StudyView } from './components/StudyView';
-import { ManageView } from './components/ManageView';
+import { FileImportInput } from './components/FileImportInput';
+import { Toast } from './components/Toast';
+import { ManageViewContainer } from './containers/ManageViewContainer';
+import { StatsViewContainer } from './containers/StatsViewContainer';
+import { StudyViewContainer } from './containers/StudyViewContainer';
+import { useDeckTransfer } from './hooks/useDeckTransfer';
 import { useFlashcards } from './hooks/useFlashcards';
-import { dbInstance } from './utils/db';
-import * as XLSX from 'xlsx';
+import { ActiveView, UiNotification } from './types';
 
 function App() {
-  const { 
-    cards, 
-    dueCards, 
-    isLoading, 
-    filters, 
-    setFilters, 
-    addCard, 
-    updateCard, 
-    deleteCard, 
+  const {
+    cards,
+    isLoading,
+    addCard,
+    updateCard,
+    deleteCard,
     gradeCard,
+    importCards,
     factoryReset,
-    refresh
   } = useFlashcards();
 
-  const [activeView, setActiveView] = useState<'study' | 'manage' | 'stats'>('study');
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [activeView, setActiveView] = useState<ActiveView>('study');
+  const [notification, setNotification] = useState<UiNotification | null>(null);
+  const [isResetDialogOpen, setIsResetDialogOpen] = useState(false);
+  const { fileInputRef, requestImport, handleFileChange, exportDeck } = useDeckTransfer({
+    cards,
+    importCards,
+    onNotify: setNotification,
+  });
 
-  const handleExport = async () => {
-    const deckName = await dbInstance.getMeta<string>('deckName') || 'AWS Flashcards';
-    const payload = { version: 2, deckName, cards };
-    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `aws-flashcards-v2-export.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-  };
-
-  const handleImport = () => {
-    fileInputRef.current?.click();
-  };
-
-  const onFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = async (event) => {
-      const data = event.target?.result;
-      if (!data) return;
-
-      if (file.name.endsWith('.json')) {
-        const obj = JSON.parse(data as string);
-        for (const c of (obj.cards || [])) {
-          await addCard(c);
-        }
-      } else if (file.name.endsWith('.xlsx') || file.name.endsWith('.xls')) {
-        const workbook = XLSX.read(data, { type: 'binary' });
-        const sheet = workbook.Sheets[workbook.SheetNames[0]];
-        const rows = XLSX.utils.sheet_to_json(sheet) as any[];
-        
-        for (const r of rows) {
-          const front = r.front || r.frente || '';
-          const back = r.back || r.reverso || r.respuesta || '';
-          if (!front || !back) continue;
-          
-          await addCard({
-            front,
-            back,
-            domain: r.domain || r.dominio || '',
-            tags: String(r.tags || r.tag || '').split(',').map(t => t.trim().toLowerCase()).filter(Boolean)
-          });
-        }
-      }
-      alert('Importación completada');
-      refresh();
-    };
-
-    if (file.name.endsWith('.json')) {
-      reader.readAsText(file);
-    } else {
-      reader.readAsBinaryString(file);
+  useEffect(() => {
+    if (!notification) {
+      return undefined;
     }
-    e.target.value = '';
+
+    const timeoutId = window.setTimeout(() => {
+      setNotification(null);
+    }, 3500);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [notification]);
+
+  const handleResetConfirm = async () => {
+    await factoryReset();
+    setIsResetDialogOpen(false);
+    setNotification({ type: 'success', message: 'Mazo reiniciado a la semilla inicial.' });
   };
 
   if (isLoading) {
@@ -97,39 +62,21 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
-      <Sidebar 
+      <Sidebar
         activeView={activeView}
         onViewChange={setActiveView}
-        onExport={handleExport}
-        onImport={handleImport}
-        onReset={() => {
-          if (confirm('¿Estás seguro de resetear todo el mazo? Se perderá el progreso.')) {
-            factoryReset();
-          }
-        }}
+        onExport={exportDeck}
+        onImport={requestImport}
+        onReset={() => setIsResetDialogOpen(true)}
       />
 
-      <input 
-        type="file" 
-        ref={fileInputRef} 
-        onChange={onFileChange} 
-        accept=".json,.xlsx,.xls" 
-        className="hidden" 
-      />
+      <FileImportInput inputRef={fileInputRef} onChange={handleFileChange} />
 
       <main className="flex-grow ml-64 p-8 lg:p-12 overflow-y-auto">
-        {activeView === 'study' && (
-          <StudyView 
-            dueCards={dueCards}
-            allCards={cards}
-            filters={filters}
-            onFilterChange={(f) => setFilters({ ...filters, ...f })}
-            onGrade={gradeCard}
-          />
-        )}
+        {activeView === 'study' && <StudyViewContainer cards={cards} onGrade={gradeCard} />}
 
         {activeView === 'manage' && (
-          <ManageView 
+          <ManageViewContainer
             cards={cards}
             onAdd={addCard}
             onUpdate={updateCard}
@@ -137,55 +84,20 @@ function App() {
           />
         )}
 
-        {activeView === 'stats' && (
-          <div className="animate-in fade-in duration-500">
-            <h2 className="text-3xl font-bold text-aws-dark mb-8">Estadísticas de Aprendizaje</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-               <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
-                 <p className="text-xs font-bold text-gray-400 uppercase mb-1">Caja 1 (Nuevo)</p>
-                 <p className="text-2xl font-bold text-red-500">{cards.filter(c => c.srs.box === 1).length}</p>
-               </div>
-               <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
-                 <p className="text-xs font-bold text-gray-400 uppercase mb-1">Caja 2</p>
-                 <p className="text-2xl font-bold text-orange-500">{cards.filter(c => c.srs.box === 2).length}</p>
-               </div>
-               <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
-                 <p className="text-xs font-bold text-gray-400 uppercase mb-1">Caja 3</p>
-                 <p className="text-2xl font-bold text-blue-500">{cards.filter(c => c.srs.box === 3).length}</p>
-               </div>
-               <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
-                 <p className="text-xs font-bold text-gray-400 uppercase mb-1">Caja 4/5 (Aprendido)</p>
-                 <p className="text-2xl font-bold text-green-500">{cards.filter(c => c.srs.box >= 4).length}</p>
-               </div>
-            </div>
-            
-            <div className="mt-12 bg-white p-8 rounded-2xl border border-gray-100 shadow-sm">
-               <h3 className="text-lg font-bold mb-6">Progreso por Dominio</h3>
-               <div className="space-y-6">
-                  {Array.from(new Set(cards.map(c => c.domain).filter(Boolean))).map(domain => {
-                    const domainCards = cards.filter(c => c.domain === domain);
-                    const learned = domainCards.filter(c => c.srs.box >= 4).length;
-                    const percent = Math.round((learned / domainCards.length) * 100);
-                    return (
-                      <div key={domain}>
-                        <div className="flex justify-between text-sm mb-2">
-                          <span className="font-bold text-gray-700">{domain}</span>
-                          <span className="text-gray-400">{percent}% ({learned}/{domainCards.length})</span>
-                        </div>
-                        <div className="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
-                          <div 
-                            className="bg-aws-orange h-full transition-all duration-1000" 
-                            style={{ width: `${percent}%` }}
-                          />
-                        </div>
-                      </div>
-                    );
-                  })}
-               </div>
-            </div>
-          </div>
-        )}
+        {activeView === 'stats' && <StatsViewContainer cards={cards} />}
       </main>
+
+      {notification && <Toast notification={notification} onClose={() => setNotification(null)} />}
+
+      {isResetDialogOpen && (
+        <ConfirmDialog
+          title="Resetear mazo"
+          message="Se perderá el progreso actual y se volverá a cargar la semilla inicial."
+          confirmLabel="Resetear"
+          onConfirm={handleResetConfirm}
+          onCancel={() => setIsResetDialogOpen(false)}
+        />
+      )}
     </div>
   );
 }
