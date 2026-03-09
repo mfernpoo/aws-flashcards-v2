@@ -1,0 +1,39 @@
+version: '3.9'
+
+services:
+  aws-flashcards:
+    # Usamos el nombre de la imagen que definimos en el Dockerfile multi-etapa
+    image: aws-flashcards:v2 
+    environment:
+      - TZ=America/Santiago
+    networks:
+      - proxy
+    deploy:
+      mode: replicated
+      replicas: 1 # Siendo archivos estáticos, con 1 réplica en la Pi 5 vas sobrado
+      placement:
+        constraints:
+          - node.role == manager
+      restart_policy:
+        condition: any
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=proxy"
+        
+        # --- Configuración de Enrutamiento ---
+        # Cambia 'flashcards.home.arpa' por el dominio local que prefieras usar
+        - "traefik.http.routers.flashcards.rule=Host(`flashcards.home.arpa`)"
+        - "traefik.http.routers.flashcards.entrypoints=web" # Si tienes HTTPS configurado, cámbialo a websecure
+        
+        # --- Configuración del Servicio ---
+        - "traefik.http.routers.flashcards.service=flashcards-svc"
+        # ¡Importante! Nginx expone el puerto 80 por defecto internamente. 
+        # No necesitas exponer puertos (- "8080:80") porque Traefik hace el puente directo.
+        - "traefik.http.services.flashcards-svc.loadbalancer.server.port=80"
+
+networks:
+  proxy:
+    external: true
