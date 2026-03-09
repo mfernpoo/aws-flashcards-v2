@@ -1,4 +1,4 @@
-import { Flashcard, DeckMetadata } from '../types';
+import { Flashcard } from '../types';
 
 const DB_NAME = 'aws_flashcards_db_v2';
 const DB_VERSION = 1;
@@ -56,6 +56,43 @@ export class FlashcardsDB {
       const request = store.put(card);
       request.onsuccess = () => resolve();
       request.onerror = () => reject(request.error);
+    });
+  }
+
+  async getCardsByDomain(domain: string): Promise<Flashcard[]> {
+    const db = await this.open();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(CARDS_STORE, 'readonly');
+      const index = tx.objectStore(CARDS_STORE).index('domain');
+      const request = index.getAll(domain);
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+  }
+
+  async getDueCards(dayEpoch: number): Promise<Flashcard[]> {
+    const db = await this.open();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(CARDS_STORE, 'readonly');
+      const index = tx.objectStore(CARDS_STORE).index('nextDue');
+      const request = index.getAll(IDBKeyRange.upperBound(dayEpoch));
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+  }
+
+  async putCards(cards: Flashcard[]): Promise<void> {
+    const db = await this.open();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(CARDS_STORE, 'readwrite');
+      const store = tx.objectStore(CARDS_STORE);
+
+      for (const card of cards) {
+        store.put(card);
+      }
+
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
     });
   }
 
