@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { ConfirmDialog } from './components/ConfirmDialog';
 import { Sidebar } from './components/Sidebar';
 import { FileImportInput } from './components/FileImportInput';
@@ -8,7 +9,7 @@ import { StatsViewContainer } from './containers/StatsViewContainer';
 import { StudyViewContainer } from './containers/StudyViewContainer';
 import { useDeckTransfer } from './hooks/useDeckTransfer';
 import { useFlashcards } from './hooks/useFlashcards';
-import { ActiveView, UiNotification } from './types';
+import { UiNotification } from './types';
 
 function App() {
   const {
@@ -22,7 +23,6 @@ function App() {
     factoryReset,
   } = useFlashcards();
 
-  const [activeView, setActiveView] = useState<ActiveView>('study');
   const [notification, setNotification] = useState<UiNotification | null>(null);
   const [isResetDialogOpen, setIsResetDialogOpen] = useState(false);
   const { fileInputRef, requestImport, handleFileChange, exportDeck } = useDeckTransfer({
@@ -63,8 +63,6 @@ function App() {
   return (
     <div className="min-h-screen bg-gray-50 flex">
       <Sidebar
-        activeView={activeView}
-        onViewChange={setActiveView}
         onExport={exportDeck}
         onImport={requestImport}
         onReset={() => setIsResetDialogOpen(true)}
@@ -73,18 +71,22 @@ function App() {
       <FileImportInput inputRef={fileInputRef} onChange={handleFileChange} />
 
       <main className="flex-grow ml-64 p-8 lg:p-12 overflow-y-auto">
-        {activeView === 'study' && <StudyViewContainer cards={cards} onGrade={gradeCard} />}
-
-        {activeView === 'manage' && (
-          <ManageViewContainer
-            cards={cards}
-            onAdd={addCard}
-            onUpdate={updateCard}
-            onDelete={deleteCard}
+        <Routes>
+          <Route path="/" element={<StudyViewContainer cards={cards} onGrade={gradeCard} />} />
+          <Route
+            path="/manage"
+            element={
+              <ManageViewContainer
+                cards={cards}
+                onAdd={addCard}
+                onUpdate={updateCard}
+                onDelete={deleteCard}
+              />
+            }
           />
-        )}
-
-        {activeView === 'stats' && <StatsViewContainer cards={cards} />}
+          <Route path="/stats" element={<StatsViewContainer cards={cards} />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
       </main>
 
       {notification && <Toast notification={notification} onClose={() => setNotification(null)} />}
