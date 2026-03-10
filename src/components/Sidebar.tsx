@@ -1,27 +1,23 @@
 import React from 'react';
 import { BookOpen, Settings, Download, Upload, Trash2, LayoutDashboard } from 'lucide-react';
+import { NavLink } from 'react-router-dom';
 import { clsx } from 'clsx';
-import { ActiveView } from '../types';
 
 interface SidebarProps {
-  activeView: ActiveView;
-  onViewChange: (view: ActiveView) => void;
   onImport: () => void;
   onExport: () => void;
   onReset: () => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
-  activeView,
-  onViewChange,
   onImport,
   onExport,
   onReset,
 }) => {
   const navItems = [
-    { id: 'study', label: 'Estudiar', icon: BookOpen },
-    { id: 'manage', label: 'Gestionar', icon: Settings },
-    { id: 'stats', label: 'Estadísticas', icon: LayoutDashboard },
+    { id: 'study', label: 'Estudiar', icon: BookOpen, path: '/' },
+    { id: 'manage', label: 'Gestionar', icon: Settings, path: '/manage' },
+    { id: 'stats', label: 'Estadísticas', icon: LayoutDashboard, path: '/stats' },
   ] as const;
 
   return (
@@ -37,19 +33,21 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       <nav className="flex-grow space-y-2">
         {navItems.map((item) => (
-          <button
+          <NavLink
             key={item.id}
-            onClick={() => onViewChange(item.id)}
-            className={clsx(
-              'w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors font-medium',
-              activeView === item.id
-                ? 'bg-aws-orange text-white'
-                : 'text-gray-400 hover:bg-white/10 hover:text-white',
-            )}
+            to={item.path}
+            className={({ isActive }) =>
+              clsx(
+                'w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors font-medium',
+                isActive
+                  ? 'bg-aws-orange text-white'
+                  : 'text-gray-400 hover:bg-white/10 hover:text-white',
+              )
+            }
           >
             <item.icon size={20} />
             {item.label}
-          </button>
+          </NavLink>
         ))}
       </nav>
 
