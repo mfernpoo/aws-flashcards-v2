@@ -38,26 +38,26 @@ export const ManageView: React.FC<ManageViewProps> = ({
 }) => {
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <header className="flex justify-between items-center">
+      <header className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
         <div>
           <h2 className="text-3xl font-bold text-aws-dark">Gestionar Mazo</h2>
           <p className="text-gray-500 mt-1">Crea, edita o elimina flashcards</p>
         </div>
         <button
           onClick={onCreateCard}
-          className="flex items-center gap-2 px-5 py-2.5 bg-aws-orange text-white rounded-xl font-bold hover:bg-orange-600 transition-all shadow-lg shadow-orange-500/20"
+          className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2.5 bg-aws-orange text-white rounded-xl font-bold hover:bg-orange-600 transition-all shadow-lg shadow-orange-500/20"
         >
           <Plus size={20} /> Nueva Carta
         </button>
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 space-y-4">
+        <div className="order-2 lg:order-1 lg:col-span-2 space-y-4">
           <FlashcardSearch value={search} onChange={onSearchChange} />
           <FlashcardTable cards={cards} onEdit={onEditCard} onDelete={onDelete} />
         </div>
 
-        <div className="lg:col-span-1">
+        <div className="order-1 lg:order-2 lg:col-span-1">
           {editingCard ? (
             <FlashcardForm
               card={editingCard}
@@ -70,7 +70,7 @@ export const ManageView: React.FC<ManageViewProps> = ({
               onDelete={onDelete}
             />
           ) : (
-            <div className="bg-gray-100 rounded-xl border border-dashed border-gray-300 p-12 text-center text-gray-400">
+            <div className="hidden lg:block bg-gray-100 rounded-xl border border-dashed border-gray-300 p-12 text-center text-gray-400">
               Selecciona una carta para editar o crea una nueva
             </div>
           )}
@@ -79,3 +79,4 @@ export const ManageView: React.FC<ManageViewProps> = ({
     </div>
   );
 };
+
