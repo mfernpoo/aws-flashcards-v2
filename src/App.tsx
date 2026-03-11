@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
+import { Menu } from 'lucide-react';
 import { ConfirmDialog } from './components/ConfirmDialog';
 import { Sidebar } from './components/Sidebar';
 import { FileImportInput } from './components/FileImportInput';
@@ -25,6 +26,7 @@ function App() {
 
   const [notification, setNotification] = useState<UiNotification | null>(null);
   const [isResetDialogOpen, setIsResetDialogOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { fileInputRef, requestImport, handleFileChange, exportDeck } = useDeckTransfer({
     cards,
     importCards,
@@ -61,8 +63,10 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen bg-gray-50">
       <Sidebar
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
         onExport={exportDeck}
         onImport={requestImport}
         onReset={() => setIsResetDialogOpen(true)}
@@ -70,24 +74,39 @@ function App() {
 
       <FileImportInput inputRef={fileInputRef} onChange={handleFileChange} />
 
-      <main className="flex-grow ml-64 p-8 lg:p-12 overflow-y-auto">
-        <Routes>
-          <Route path="/" element={<StudyViewContainer cards={cards} onGrade={gradeCard} />} />
-          <Route
-            path="/manage"
-            element={
-              <ManageViewContainer
-                cards={cards}
-                onAdd={addCard}
-                onUpdate={updateCard}
-                onDelete={deleteCard}
-              />
-            }
-          />
-          <Route path="/stats" element={<StatsViewContainer cards={cards} />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </main>
+      <div className="lg:ml-64 min-h-screen flex flex-col">
+        {/* Mobile Header */}
+        <div className="lg:hidden bg-aws-dark text-white p-4 sticky top-0 z-30 shadow-md flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-6 bg-aws-orange rounded flex items-center justify-center font-bold text-white text-xs">
+              AWS
+            </div>
+            <h1 className="text-lg font-bold">Flashcards v2</h1>
+          </div>
+          <button onClick={() => setIsSidebarOpen(true)} className="p-1 hover:bg-white/10 rounded">
+            <Menu size={24} />
+          </button>
+        </div>
+
+        <main className="flex-grow p-4 lg:p-12 overflow-y-auto">
+          <Routes>
+            <Route path="/" element={<StudyViewContainer cards={cards} onGrade={gradeCard} />} />
+            <Route
+              path="/manage"
+              element={
+                <ManageViewContainer
+                  cards={cards}
+                  onAdd={addCard}
+                  onUpdate={updateCard}
+                  onDelete={deleteCard}
+                />
+              }
+            />
+            <Route path="/stats" element={<StatsViewContainer cards={cards} />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </main>
+      </div>
 
       {notification && <Toast notification={notification} onClose={() => setNotification(null)} />}
 

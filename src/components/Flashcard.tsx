@@ -71,37 +71,37 @@ export const Flashcard: React.FC<FlashcardProps> = ({ card, onGrade }) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
-            className="grid grid-cols-3 gap-4 w-full mt-8"
+            className="grid grid-cols-3 gap-2 sm:gap-4 w-full mt-8"
           >
             <button
               onClick={(event) => {
                 event.stopPropagation();
                 void onGrade(1);
               }}
-              className="flex flex-col items-center gap-2 p-4 bg-red-50 hover:bg-red-100 text-red-700 rounded-xl transition-colors border border-red-200"
+              className="flex flex-col items-center gap-1 sm:gap-2 p-2 sm:p-4 bg-red-50 hover:bg-red-100 text-red-700 rounded-xl transition-colors border border-red-200"
             >
-              <span className="font-bold">Difícil</span>
-              <span className="text-xs opacity-70">Hoy mismo</span>
+              <span className="font-bold text-sm sm:text-base">Difícil</span>
+              <span className="text-[10px] sm:text-xs opacity-70">Hoy mismo</span>
             </button>
             <button
               onClick={(event) => {
                 event.stopPropagation();
                 void onGrade(2);
               }}
-              className="flex flex-col items-center gap-2 p-4 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-xl transition-colors border border-blue-200"
+              className="flex flex-col items-center gap-1 sm:gap-2 p-2 sm:p-4 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-xl transition-colors border border-blue-200"
             >
-              <span className="font-bold">Bien</span>
-              <span className="text-xs opacity-70">En unos días</span>
+              <span className="font-bold text-sm sm:text-base">Bien</span>
+              <span className="text-[10px] sm:text-xs opacity-70">En unos días</span>
             </button>
             <button
               onClick={(event) => {
                 event.stopPropagation();
                 void onGrade(3);
               }}
-              className="flex flex-col items-center gap-2 p-4 bg-green-50 hover:bg-green-100 text-green-700 rounded-xl transition-colors border border-green-200"
+              className="flex flex-col items-center gap-1 sm:gap-2 p-2 sm:p-4 bg-green-50 hover:bg-green-100 text-green-700 rounded-xl transition-colors border border-green-200"
             >
-              <span className="font-bold">Fácil</span>
-              <span className="text-xs opacity-70">En 1-2 semanas</span>
+              <span className="font-bold text-sm sm:text-base">Fácil</span>
+              <span className="text-[10px] sm:text-xs opacity-70">En 1-2 semanas</span>
             </button>
           </motion.div>
         )}
