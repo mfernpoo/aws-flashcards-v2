@@ -1,3 +1,5 @@
+import { RecordModel } from 'pocketbase';
+
 export interface SRSData {
   box: number;
   nextDue: number;
@@ -5,6 +7,24 @@ export interface SRSData {
   lastGrade: number;
 }
 
+// Data from PocketBase (Content)
+export interface FlashcardContent extends RecordModel {
+  front: string;
+  back: string;
+  domain: string;
+  tags: string[];
+}
+
+// Data from Dexie (Progress)
+export interface FlashcardProgress {
+  cardId: string; // Foreign Key to PocketBase ID
+  box: number;
+  nextDue: number;
+  streak: number;
+  lastGrade: number;
+}
+
+// Unified Type for UI (Hydrated)
 export interface Flashcard {
   id: string;
   front: string;
@@ -25,7 +45,7 @@ export type ActiveView = 'study' | 'manage' | 'stats';
 
 export interface DeckSeedData {
   deckName: string;
-  cards: Partial<Flashcard>[];
+  cards: Partial<FlashcardContent>[];
 }
 
 export interface ImportCardsResult {

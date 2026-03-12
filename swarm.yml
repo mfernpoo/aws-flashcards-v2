@@ -1,16 +1,17 @@
 version: '3.9'
 
 services:
-  aws-flashcards:
-    # Usamos el nombre de la imagen que definimos en el Dockerfile multi-etapa
-    image: aws-flashcards:v2 
+  frontend:
+    build:
+      context: ./frontend
+    image: aws-flashcards:v2-hybrid
     environment:
       - TZ=America/Santiago
     networks:
       - proxy
     deploy:
       mode: replicated
-      replicas: 1 # Siendo archivos estáticos, con 1 réplica en la Pi 5 vas sobrado
+      replicas: 1
       placement:
         constraints:
           - node.role == manager
@@ -22,17 +23,32 @@ services:
       labels:
         - "traefik.enable=true"
         - "traefik.docker.network=proxy"
-        
-        # --- Configuración de Enrutamiento ---
-        # Cambia 'flashcards.home.arpa' por el dominio local que prefieras usar
         - "traefik.http.routers.flashcards.rule=Host(`flashcards.home.arpa`)"
-        - "traefik.http.routers.flashcards.entrypoints=web" # Si tienes HTTPS configurado, cámbialo a websecure
-        
-        # --- Configuración del Servicio ---
+        - "traefik.http.routers.flashcards.entrypoints=web"
         - "traefik.http.routers.flashcards.service=flashcards-svc"
-        # ¡Importante! Nginx expone el puerto 80 por defecto internamente. 
-        # No necesitas exponer puertos (- "8080:80") porque Traefik hace el puente directo.
         - "traefik.http.services.flashcards-svc.loadbalancer.server.port=80"
+
+  backend:
+    image: ghcr.io/muchobien/pocketbase:latest
+    volumes:
+      - pb_data:/pb/pb_data
+    networks:
+      - proxy
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=proxy"
+        - "traefik.http.routers.flashcards-api.rule=Host(`api.flashcards.home.arpa`)"
+        - "traefik.http.routers.flashcards-api.entrypoints=web"
+        - "traefik.http.services.flashcards-api.loadbalancer.server.port=8090"
+
+volumes:
+  pb_data:
 
 networks:
   proxy:

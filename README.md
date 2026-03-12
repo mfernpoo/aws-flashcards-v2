@@ -1,29 +1,48 @@
-# AWS Flashcards v2 (Webapp)
+# AWS Flashcards v2 (Hybrid Architecture)
 
-Versión modernizada de la aplicación de flashcards para AWS CLF-C02.
+Aplicación de Flashcards diseñada para estudiar certificaciones AWS, utilizando una arquitectura híbrida **Local-First** con **PocketBase**.
 
-## Mejoras v2
-- **Tech Stack**: React 18 + TypeScript + Vite.
-- **UI/UX**: Diseño moderno inspirado en AWS usando Tailwind CSS.
-- **Animaciones**: Flashcards con efecto 3D y transiciones fluidas con Framer Motion.
-- **Dashboard**: Vista de estadísticas con progreso por dominio de AWS y estado del algoritmo SRS.
-- **Algoritmo SRS**: Implementación refinada del sistema Leitner.
-- **Gestión**: Editor de cartas mejorado con búsqueda y filtrado.
+## Arquitectura
 
-## Características heredadas
-- **Offline First**: Persistencia total en el navegador con IndexedDB.
-- **Seed Data**: Incluye las cartas base del mazo.
-- **Import/Export**: Soporte para XLSX y JSON.
+El proyecto utiliza un enfoque de **Monorepo** con dos servicios principales desplegados vía Docker Swarm:
 
-## Cómo correr
-1. Entra al directorio: `cd aws-flashcards-v2`
-2. Instala dependencias: `npm install`
-3. Inicia desarrollo: `npm run dev`
-4. Construye para producción: `npm run build`
+### 1. Frontend (`/frontend`)
+*   **Stack:** React + TypeScript + Vite + TailwindCSS.
+*   **Estado Local:** El progreso de estudio (Cajas SRS, Fechas de repaso, Rachas) se guarda en el navegador del usuario usando **IndexedDB** (Dexie.js).
+*   **Privacidad:** Cada dispositivo mantiene su propio ritmo de estudio.
 
-## Estructura del proyecto
-- `src/components`: Componentes presentacionales y piezas de UI reutilizables.
-- `src/containers`: Coordinación de vistas, filtros y eventos.
-- `src/hooks`: Hooks de datos, transferencia y estado compartido.
-- `src/utils`: Persistencia, bootstrap del seed, algoritmo SRS y utilidades auxiliares.
-- `src/types.ts`: Tipos principales del dominio.
+### 2. Backend (`/backend`)
+*   **Stack:** PocketBase (Go + SQLite).
+*   **Estado Global:** Almacena el *contenido* de las tarjetas (Preguntas, Respuestas, Tags).
+*   **Sincronización:**
+    *   Al iniciar, el frontend descarga las cartas del backend.
+    *   Al crear una carta, se sube al backend y se notifica a todos los clientes conectados en tiempo real.
+
+## Despliegue (Docker Swarm)
+
+El archivo `swarm.yml` orquesta ambos servicios detrás de Traefik.
+
+```yaml
+# Estructura de Red
+Frontend: http://flashcards.home.arpa
+Backend:  http://api.flashcards.home.arpa
+```
+
+### Comandos de Despliegue
+
+```bash
+docker stack deploy -c swarm.yml flashcards
+```
+
+## Desarrollo Local
+
+1.  **Backend:**
+    *   Descargar el ejecutable de PocketBase o correr con Docker.
+    *   Crear colección `cards` (public read/write para demo).
+
+2.  **Frontend:**
+    ```bash
+    cd frontend
+    npm install
+    npm run dev
+    ```
