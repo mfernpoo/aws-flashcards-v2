@@ -1401,7 +1401,7 @@
     },
     {
       "id": "k6l7z8x9c0",
-      "front": "Seguridad: ¿Qué es AWS CloudHSM?",
+      "front": "Seguridad: ¿Qué es AWS Cloud (cloud-based hardware security module)?",
       "back": "Módulo de seguridad de hardware (HSM) en la nube que le permite generar y utilizar fácilmente sus propias claves de cifrado en la nube de AWS.",
       "tags": [
         "security",
