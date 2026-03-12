@@ -4,7 +4,7 @@ import { ManageView } from '../components/ManageView';
 
 interface ManageViewContainerProps {
   cards: Flashcard[];
-  onAdd: (card: Partial<Flashcard>) => Promise<Flashcard>;
+  onAdd: (card: Partial<Flashcard>) => Promise<void>;
   onUpdate: (card: Flashcard) => Promise<void>;
   onDelete: (id: string) => Promise<void>;
 }
