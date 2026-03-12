@@ -4,7 +4,7 @@ services:
   frontend:
     build:
       context: ./frontend
-    image: aws-flashcards:v2-hybrid
+    image: aws-flashcards:v2
     environment:
       - TZ=America/Santiago
     networks:
