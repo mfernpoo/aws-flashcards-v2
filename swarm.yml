@@ -4,7 +4,7 @@ services:
   frontend:
     build:
       context: ./frontend
-    image: aws-flashcards:v2
+    image: aws-flashcards:v2-hybrid
     environment:
       - TZ=America/Santiago
     networks:
@@ -32,6 +32,13 @@ services:
     image: ghcr.io/muchobien/pocketbase:latest
     volumes:
       - pb_data:/pb/pb_data
+    secrets:
+      - pb_admin_email
+      - pb_admin_password
+    environment:
+      # Apuntamos a la ruta donde Docker monta el secreto
+      - PB_ADMIN_EMAIL_FILE=/run/secrets/pb_admin_email
+      - PB_ADMIN_PASSWORD_FILE=/run/secrets/pb_admin_password
     networks:
       - proxy
     deploy:
@@ -53,3 +60,10 @@ volumes:
 networks:
   proxy:
     external: true
+
+secrets:
+  pb_admin_email:
+    external: true
+  pb_admin_password:
+    external: true
+
