@@ -385,6 +385,50 @@
       "domain": "D3"
     },
     {
+      "id": "wv92k1l0p3",
+      "front": "Infraestructura: ¿Qué es AWS Wavelength?",
+      "back": "Servicio que integra recursos de AWS en redes 5G de operadores de telecomunicaciones para latencia ultra baja en dispositivos móviles.",
+      "tags": [
+        "infrastructure",
+        "edge",
+        "5g"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "lz84m2n1q4",
+      "front": "Infraestructura: ¿Qué son las AWS Local Zones?",
+      "back": "Extensión de una región de AWS que coloca servicios (cómputo, almacenamiento, BD) cerca de grandes centros de población para latencia de un solo dígito de milisegundo.",
+      "tags": [
+        "infrastructure",
+        "edge",
+        "latency"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "sc_wv_5g_t1",
+      "front": "Escenario: Una app de realidad aumentada móvil requiere procesar datos con latencia mínima usando la red celular del operador.",
+      "back": "AWS Wavelength.",
+      "tags": [
+        "scenario",
+        "exam",
+        "5g"
+      ],
+      "domain": "D3"
+    },
+    {
+      "id": "sc_lz_mil_t2",
+      "front": "Escenario: Un cliente en una ciudad específica (ej. Los Ángeles) necesita latencia de un dígito de milisegundo para renderizado de video sin mover sus datos a la región principal.",
+      "back": "AWS Local Zones.",
+      "tags": [
+        "scenario",
+        "exam",
+        "latency"
+      ],
+      "domain": "D3"
+    },
+    {
       "id": "3z7bom2ja8",
       "front": "CloudTrail: ¿para qué sirve?",
       "back": "Auditoría de llamadas a APIs (quién, qué, cuándo, desde dónde).",
