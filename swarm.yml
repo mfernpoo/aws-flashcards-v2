@@ -50,7 +50,7 @@ services:
       labels:
         - "traefik.enable=true"
         - "traefik.docker.network=proxy"
-        - "traefik.http.routers.flashcards-api.rule=Host(`api.flashcards.home.arpa`) || (Host(`flashcards.home.arpa`) && PathPrefix(`/api`, `/_/`))"
+        - "traefik.http.routers.flashcards-api.rule=Host(`api.flashcards.home.arpa`) || (Host(`flashcards.home.arpa`) && (PathPrefix(`/api`) || PathPrefix(`/_/`)))"
         - "traefik.http.routers.flashcards-api.entrypoints=web"
         - "traefik.http.services.flashcards-api.loadbalancer.server.port=8090"
 
