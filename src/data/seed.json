@@ -666,7 +666,7 @@
     },
     {
       "id": "v4b66wn26u",
-      "front": "SCT: ¿para qué sirve?",
+      "front": "Amazon Schema Conversion Tool (SCT): ¿para qué sirve?",
       "back": "Convertir esquemas/código de BD al motor objetivo.",
       "tags": [
         "migration"
@@ -1152,7 +1152,7 @@
     },
     {
       "id": "i1j2k3l4m5",
-      "front": "Amazon EMR: ¿Qué es?",
+      "front": "Amazon Elastic MapReduce (EMR): ¿Qué es?",
       "back": "Plataforma de big data en la nube para procesar grandes cantidades de datos utilizando herramientas de código abierto como Apache Spark y Hadoop.",
       "tags": [
         "analytics",
