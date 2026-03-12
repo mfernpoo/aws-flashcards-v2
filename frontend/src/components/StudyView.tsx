@@ -2,6 +2,7 @@ import React from 'react';
 import { Flashcard } from './Flashcard';
 import { Flashcard as IFlashcard, FlashcardFilters, Grade } from '../types';
 import { Search, Filter, RefreshCw } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface StudyViewProps {
   currentCard: IFlashcard | null;
@@ -77,26 +78,42 @@ export const StudyView: React.FC<StudyViewProps> = ({
       </header>
 
       <div className="py-10">
-        {currentCard ? (
-          <Flashcard card={currentCard} onGrade={onGrade} />
-        ) : (
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-20 text-center space-y-4">
-            <div className="w-20 h-20 bg-green-50 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
-              <RefreshCw size={40} />
-            </div>
-            <h3 className="text-2xl font-bold text-gray-800">¡Todo al día!</h3>
-            <p className="text-gray-500 max-w-md mx-auto">
-              No tienes más cartas pendientes para estudiar con los filtros seleccionados.
-              Vuelve mañana o cambia los filtros.
-            </p>
-            <button
-              onClick={onClearFilters}
-              className="mt-6 px-6 py-3 bg-aws-orange text-white rounded-xl font-bold hover:bg-orange-600 transition-colors shadow-lg shadow-orange-500/20"
+        <AnimatePresence mode="wait">
+          {currentCard ? (
+            <motion.div
+              key={currentCard.id}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.2 }}
             >
-              Ver todas las cartas
-            </button>
-          </div>
-        )}
+              <Flashcard card={currentCard} onGrade={onGrade} />
+            </motion.div>
+          ) : (
+            <motion.div
+              key="empty-state"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-2xl shadow-sm border border-gray-100 p-20 text-center space-y-4"
+            >
+              <div className="w-20 h-20 bg-green-50 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                <RefreshCw size={40} />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-800">¡Todo al día!</h3>
+              <p className="text-gray-500 max-w-md mx-auto">
+                No tienes más cartas pendientes para estudiar con los filtros seleccionados.
+                Vuelve mañana o cambia los filtros.
+              </p>
+              <button
+                onClick={onClearFilters}
+                className="mt-6 px-6 py-3 bg-aws-orange text-white rounded-xl font-bold hover:bg-orange-600 transition-colors shadow-lg shadow-orange-500/20"
+              >
+                Ver todas las cartas
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
