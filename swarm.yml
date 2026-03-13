@@ -39,8 +39,8 @@ services:
       - /bin/sh
       - -c
       - |
-        export PB_ADMIN_EMAIL="$(tr -d '\r\n' < /run/secrets/pb_admin_email)"
-        export PB_ADMIN_PASSWORD="$(tr -d '\r\n' < /run/secrets/pb_admin_password)"
+        export PB_ADMIN_EMAIL="$$(tr -d '\r\n' < /run/secrets/pb_admin_email)"
+        export PB_ADMIN_PASSWORD="$$(tr -d '\r\n' < /run/secrets/pb_admin_password)"
         exec /usr/local/bin/entrypoint.sh
     networks:
       - proxy
