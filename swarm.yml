@@ -35,10 +35,13 @@ services:
     secrets:
       - pb_admin_email
       - pb_admin_password
-    environment:
-      # Apuntamos a la ruta donde Docker monta el secreto
-      - PB_ADMIN_EMAIL=/run/secrets/pb_admin_email
-      - PB_ADMIN_PASSWORD=/run/secrets/pb_admin_password
+    command:
+      - /bin/sh
+      - -c
+      - |
+        export PB_ADMIN_EMAIL="$(tr -d '\r\n' < /run/secrets/pb_admin_email)"
+        export PB_ADMIN_PASSWORD="$(tr -d '\r\n' < /run/secrets/pb_admin_password)"
+        exec /usr/local/bin/entrypoint.sh
     networks:
       - proxy
     deploy:
