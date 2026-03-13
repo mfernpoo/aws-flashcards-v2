@@ -1,13 +1,14 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { Flashcard, FlashcardContent, FlashcardProgress, Grade, ImportCardsResult } from '../types';
 import { dbInstance } from '../utils/db';
-import { ensureSRS, calculateNextDue, nowDay } from '../utils/srs';
+import { calculateNextDue, nowDay } from '../utils/srs';
 import { getCardsCollection } from '../lib/pocketbase';
 import { seedPocketBase } from '../utils/seed';
 
 export function useFlashcards() {
   const [cards, setCards] = useState<Flashcard[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const hasReconciledSeed = useRef(false);
 
   // Merge logic: Content (PB) + Progress (Dexie)
   const mergeData = useCallback((content: FlashcardContent[], progress: FlashcardProgress[]): Flashcard[] => {
@@ -30,23 +31,19 @@ export function useFlashcards() {
     });
   }, []);
 
-  const loadCards = useCallback(async () => {
+  const loadCards = useCallback(async (options?: { reconcileSeed?: boolean }) => {
     try {
-      // 1. Fetch Content from PocketBase
-      let content = await getCardsCollection().getFullList<FlashcardContent>();
-
-      // 2. Check for Seeding (First Run)
-      if (content.length === 0) {
-        const seeded = await seedPocketBase();
-        if (seeded) {
-          content = await getCardsCollection().getFullList<FlashcardContent>();
-        }
+      if (options?.reconcileSeed) {
+        await seedPocketBase();
       }
 
-      // 3. Fetch Progress from Dexie
+      // 1. Fetch Content from PocketBase
+      const content = await getCardsCollection().getFullList<FlashcardContent>();
+
+      // 2. Fetch Progress from Dexie
       const progress = await dbInstance.getAllProgress();
 
-      // 4. Merge & Set State
+      // 3. Merge & Set State
       const merged = mergeData(content, progress);
       setCards(merged);
     } catch (error) {
@@ -60,7 +57,9 @@ export function useFlashcards() {
 
   // Initial Load & Realtime Subscription
   useEffect(() => {
-    loadCards();
+    const shouldReconcileSeed = !hasReconciledSeed.current;
+    hasReconciledSeed.current = true;
+    void loadCards({ reconcileSeed: shouldReconcileSeed });
 
     // Subscribe to changes in PB (Content)
     getCardsCollection().subscribe('*', (e) => {
