@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Save, Trash2, X } from 'lucide-react';
 import { Flashcard } from '../../types';
 import { DECK_DOMAINS } from '../../constants/domains';
@@ -24,6 +24,31 @@ export const FlashcardForm: React.FC<FlashcardFormProps> = ({
   onSave,
   onDelete,
 }) => {
+  const [localTags, setLocalTags] = useState(card.tags?.join(', ') || '');
+
+  useEffect(() => {
+    const currentTags = card.tags || [];
+    // Normalizamos el input local para compararlo con la fuente de verdad
+    const localTagsNormalized = localTags
+      .split(',')
+      .map((tag) => tag.trim())
+      .filter(Boolean);
+
+    // Comparamos el contenido semántico. Si es diferente, significa que
+    // el cambio vino de fuera (ej: cargar otra carta) y debemos actualizar el local.
+    // Usamos JSON.stringify para una comparación simple de arrays de strings.
+    if (JSON.stringify(currentTags) !== JSON.stringify(localTagsNormalized)) {
+      setLocalTags(card.tags?.join(', ') || '');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [card.tags, card.id]);
+
+  const handleTagsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setLocalTags(value);
+    onTagsChange(value);
+  };
+
   return (
     <div className="bg-white rounded-xl border-2 border-aws-orange shadow-xl p-6 sticky top-8 space-y-6">
       <div className="flex justify-between items-center">
@@ -83,8 +108,8 @@ export const FlashcardForm: React.FC<FlashcardFormProps> = ({
             <input
               type="text"
               placeholder="s3, iam, ec2..."
-              value={card.tags?.join(', ') || ''}
-              onChange={(event) => onTagsChange(event.target.value)}
+              value={localTags}
+              onChange={handleTagsChange}
               className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-aws-orange"
             />
           </div>
