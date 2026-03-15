@@ -70,7 +70,7 @@ export const ManageViewContainer: React.FC<ManageViewContainerProps> = ({
                 ...current,
                 tags: tags
                   .split(',')
-                  .map((tag) => tag.trim().toLowerCase())
+                  .map((tag) => tag.trim())
                   .filter(Boolean),
               }
             : current,

@@ -31,7 +31,7 @@ export const FlashcardForm: React.FC<FlashcardFormProps> = ({
     // Normalizamos el input local para compararlo con la fuente de verdad
     const localTagsNormalized = localTags
       .split(',')
-      .map((tag) => tag.trim().toLowerCase())
+      .map((tag) => tag.trim())
       .filter(Boolean);
 
     // Comparamos el contenido semántico. Si es diferente, significa que
