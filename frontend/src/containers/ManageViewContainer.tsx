@@ -54,6 +54,7 @@ export const ManageViewContainer: React.FC<ManageViewContainerProps> = ({
   return (
     <ManageView
       cards={filteredCards}
+      totalCards={cards.length}
       search={search}
       editingCard={editingCard}
       onSearchChange={setSearch}

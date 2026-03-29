@@ -1,9 +1,8 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Flashcard, FlashcardContent, FlashcardProgress, Grade, ImportCardsResult } from '../types';
 import { dbInstance } from '../utils/db';
 import { calculateNextDue, isValidSRSData, nowDay } from '../utils/srs';
 import { getCardsCollection } from '../lib/pocketbase';
-import { seedPocketBase } from '../utils/seed';
 
 const normalizeTags = (tags: string[] | undefined) => {
   return [...new Set((tags ?? []).map((tag) => tag.trim().toLowerCase()).filter(Boolean))].sort();
@@ -21,7 +20,6 @@ const normalizeCardPayload = (card: Partial<Flashcard>) => {
 export function useFlashcards() {
   const [cards, setCards] = useState<Flashcard[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const hasReconciledSeed = useRef(false);
 
   // Merge logic: Content (PB) + Progress (Dexie)
   const mergeData = useCallback((content: FlashcardContent[], progress: FlashcardProgress[]): Flashcard[] => {
@@ -44,14 +42,10 @@ export function useFlashcards() {
     });
   }, []);
 
-  const loadCards = useCallback(async (options?: { reconcileSeed?: boolean }) => {
+  const loadCards = useCallback(async () => {
     try {
-      if (options?.reconcileSeed) {
-        await seedPocketBase();
-      }
-
       // 1. Fetch Content from PocketBase
-      const content = await getCardsCollection().getFullList<FlashcardContent>();
+      const content = await getCardsCollection().getFullList<FlashcardContent>({ requestKey: null });
 
       // 2. Fetch Progress from Dexie
       const progress = await dbInstance.getAllProgress();
@@ -70,13 +64,10 @@ export function useFlashcards() {
 
   // Initial Load & Realtime Subscription
   useEffect(() => {
-    const shouldReconcileSeed = !hasReconciledSeed.current;
-    hasReconciledSeed.current = true;
-    void loadCards({ reconcileSeed: shouldReconcileSeed });
+    void loadCards();
 
     // Subscribe to changes in PB (Content)
     getCardsCollection().subscribe('*', (e) => {
-      console.log('Realtime update:', e.action, e.record);
       // Optimally, we'd update state locally. For simplicity, reload content.
       void loadCards();
     });
@@ -138,7 +129,7 @@ export function useFlashcards() {
   // Hybrid import: sync content to PocketBase and optional SRS progress to Dexie.
   const importCards = async (cardsToImport: Partial<Flashcard>[]): Promise<ImportCardsResult> => {
     const collection = getCardsCollection();
-    const existingCards = await collection.getFullList<FlashcardContent>();
+    const existingCards = await collection.getFullList<FlashcardContent>({ requestKey: null });
     const existingById = new Map(existingCards.map((card) => [card.id, card]));
     const existingByFront = new Map(
       existingCards.map((card) => [card.front.trim().toLowerCase(), card]),
