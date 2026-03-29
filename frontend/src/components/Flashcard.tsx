@@ -23,7 +23,10 @@ export const Flashcard: React.FC<FlashcardProps> = ({ card, onGrade }) => {
 
   return (
     <div className="w-full max-w-2xl mx-auto flex flex-col items-center">
-      <div className="w-full h-80 relative cursor-pointer group" onClick={() => setIsFlipped(!isFlipped)}>
+      <div
+        className="w-full h-80 relative cursor-pointer group"
+        onClick={() => setIsFlipped(!isFlipped)}
+      >
         <div
           className={cn(
             'w-full h-full duration-500 preserve-3d transition-transform relative',
@@ -43,8 +46,12 @@ export const Flashcard: React.FC<FlashcardProps> = ({ card, onGrade }) => {
                 ))}
               </div>
             </div>
-            <div className="flex-grow flex items-center justify-center text-center">
-              <h3 className="text-2xl font-semibold text-gray-800 leading-relaxed">{card.front}</h3>
+            <div className="flex-grow overflow-y-auto pr-1">
+              <div className="min-h-full flex items-center justify-center text-center pt-4">
+                <h3 className="text-2xl font-semibold text-gray-800 leading-relaxed break-words text-center">
+                  {card.front}
+                </h3>
+              </div>
             </div>
             <div className="text-center text-gray-400 text-sm mt-4 flex items-center justify-center gap-2">
               <RotateCcw size={14} /> Haz clic para voltear
