@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useId, useRef } from 'react';
 import { Flashcard as IFlashcard } from '../types';
 import { Plus } from 'lucide-react';
 import { FlashcardSearch } from './manage/FlashcardSearch';
@@ -7,6 +7,7 @@ import { FlashcardForm } from './manage/FlashcardForm';
 
 interface ManageViewProps {
   cards: IFlashcard[];
+  totalCards: number;
   search: string;
   editingCard: Partial<IFlashcard> | null;
   onSearchChange: (search: string) => void;
@@ -23,6 +24,7 @@ interface ManageViewProps {
 
 export const ManageView: React.FC<ManageViewProps> = ({
   cards,
+  totalCards,
   search,
   editingCard,
   onSearchChange,
@@ -36,29 +38,94 @@ export const ManageView: React.FC<ManageViewProps> = ({
   onSave,
   onDelete,
 }) => {
+  const dialogTitleId = useId();
+  const dialogDescriptionId = useId();
+  const dialogRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!editingCard) {
+      return;
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        onCloseEditor();
+      }
+
+      if (event.key === 'Tab' && dialogRef.current) {
+        const focusableElements = dialogRef.current.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+        );
+
+        if (focusableElements.length === 0) {
+          return;
+        }
+
+        const firstElement = focusableElements[0];
+        const lastElement = focusableElements[focusableElements.length - 1];
+
+        if (event.shiftKey && document.activeElement === firstElement) {
+          event.preventDefault();
+          lastElement.focus();
+        } else if (!event.shiftKey && document.activeElement === lastElement) {
+          event.preventDefault();
+          firstElement.focus();
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [editingCard, onCloseEditor]);
+
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <>
+      <section className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 lg:h-full lg:flex lg:flex-col" aria-labelledby="manage-view-title">
       <header className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
         <div>
-          <h2 className="text-3xl font-bold text-aws-dark">Gestionar Mazo</h2>
-          <p className="text-gray-500 mt-1">Crea, edita o elimina flashcards</p>
+          <h2 id="manage-view-title" className="text-3xl font-bold text-aws-dark">Gestionar Mazo</h2>
+          <p className="text-gray-600 mt-1">Crea, edita o elimina flashcards</p>
         </div>
         <button
+          type="button"
           onClick={onCreateCard}
-          className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2.5 bg-aws-orange text-white rounded-xl font-bold hover:bg-orange-600 transition-all shadow-lg shadow-orange-500/20"
+          className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2.5 bg-aws-orange text-white rounded-xl font-bold hover:bg-orange-600 transition-all shadow-lg shadow-orange-500/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aws-orange focus-visible:ring-offset-2"
         >
-          <Plus size={20} /> Nueva Carta
+          <Plus size={20} aria-hidden="true" /> Nueva Carta
         </button>
       </header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="order-2 lg:order-1 lg:col-span-2 space-y-4">
-          <FlashcardSearch value={search} onChange={onSearchChange} />
-          <FlashcardTable cards={cards} onEdit={onEditCard} onDelete={onDelete} />
-        </div>
+      <div className="lg:flex-1 lg:min-h-0">
+        <section className="space-y-4 lg:min-h-0 lg:flex lg:flex-col" aria-label="Listado y búsqueda del mazo">
+          <FlashcardSearch value={search} onChange={onSearchChange} resultCount={cards.length} />
+          <div className="lg:flex-1 lg:min-h-0">
+            <FlashcardTable cards={cards} onEdit={onEditCard} onDelete={onDelete} />
+          </div>
+          <p className="text-sm text-gray-600">
+            {search
+              ? `Mostrando ${cards.length} de ${totalCards} cartas del mazo.`
+              : `Mostrando ${totalCards} cartas del mazo.`}
+          </p>
+        </section>
+      </div>
+      </section>
 
-        <div className="order-1 lg:order-2 lg:col-span-1">
-          {editingCard ? (
+      {editingCard && (
+        <div
+          className="fixed inset-0 z-40 bg-slate-950/45 flex items-center justify-center p-4"
+          role="presentation"
+          onClick={onCloseEditor}
+        >
+          <div
+            ref={dialogRef}
+            className="w-full max-w-2xl max-h-[90vh] overflow-y-auto"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={dialogTitleId}
+            aria-describedby={dialogDescriptionId}
+            onClick={(event) => event.stopPropagation()}
+          >
             <FlashcardForm
               card={editingCard}
               onClose={onCloseEditor}
@@ -69,14 +136,13 @@ export const ManageView: React.FC<ManageViewProps> = ({
               onSave={onSave}
               onDelete={onDelete}
             />
-          ) : (
-            <div className="hidden lg:block bg-gray-100 rounded-xl border border-dashed border-gray-300 p-12 text-center text-gray-400">
-              Selecciona una carta para editar o crea una nueva
+            <div className="sr-only">
+              <h3 id={dialogTitleId}>{editingCard.id ? 'Editar carta' : 'Nueva carta'}</h3>
+              <p id={dialogDescriptionId}>Formulario modal para crear o editar una flashcard.</p>
             </div>
-          )}
+          </div>
         </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 };
-

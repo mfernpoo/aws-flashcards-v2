@@ -16,6 +16,7 @@ El proyecto utiliza un enfoque de **Monorepo** con dos servicios principales des
 *   **Estado Global:** Almacena el *contenido* de las tarjetas (Preguntas, Respuestas, Tags).
 *   **Sincronización:**
     *   Al iniciar, el frontend descarga las cartas del backend.
+    *   El contenido inicial del mazo debe cargarse en PocketBase mediante importación o creación manual.
     *   Al crear una carta, se sube al backend y se notifica a todos los clientes conectados en tiempo real.
 
 ## Despliegue (Docker Swarm)

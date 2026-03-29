@@ -5,10 +5,53 @@
 @layer base {
   :root {
     --aws-orange: #FF9900;
+    --aws-dark: #232F3E;
+    --surface-default: #F9FAFB;
+    --surface-card: #FFFFFF;
+    --border-subtle: #E5E7EB;
+    --text-primary: #111827;
+    --text-secondary: #4B5563;
+    --focus-ring: #FF9900;
+  }
+
+  body {
+    color: var(--text-primary);
+    background-color: var(--surface-default);
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    accent-color: var(--aws-orange);
+  }
+
+  ::selection {
+    background: rgba(255, 153, 0, 0.2);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      scroll-behavior: auto !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }
 
 @layer utilities {
+  .focus-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
+    --tw-ring-color: var(--focus-ring);
+  }
+
+  .scrollbar-gutter-stable {
+    scrollbar-gutter: stable;
+  }
+
   .preserve-3d {
     transform-style: preserve-3d;
   }

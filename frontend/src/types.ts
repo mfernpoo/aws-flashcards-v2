@@ -43,11 +43,6 @@ export interface FlashcardFilters {
 
 export type ActiveView = 'study' | 'manage' | 'stats';
 
-export interface DeckSeedData {
-  deckName: string;
-  cards: Partial<FlashcardContent>[];
-}
-
 export interface ImportCardsResult {
   total: number;
   created: number;
