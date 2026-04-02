@@ -2,6 +2,7 @@ import React, { useEffect, useId, useRef } from 'react';
 import { BookOpen, Settings, Download, Upload, Trash2, LayoutDashboard, X } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import { clsx } from 'clsx';
+import { useEscapeKey } from '../hooks/useEscapeKey';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -13,6 +14,12 @@ interface SidebarProps {
   importInputId: string;
   importDescriptionId: string;
 }
+
+const navItems = [
+  { id: 'study', label: 'Estudiar', icon: BookOpen, path: '/' },
+  { id: 'manage', label: 'Gestionar', icon: Settings, path: '/manage' },
+  { id: 'stats', label: 'Estadísticas', icon: LayoutDashboard, path: '/stats' },
+] as const;
 
 export const Sidebar: React.FC<SidebarProps> = ({
   isOpen,
@@ -28,11 +35,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const navId = useId();
 
-  const navItems = [
-    { id: 'study', label: 'Estudiar', icon: BookOpen, path: '/' },
-    { id: 'manage', label: 'Gestionar', icon: Settings, path: '/manage' },
-    { id: 'stats', label: 'Estadísticas', icon: LayoutDashboard, path: '/stats' },
-  ] as const;
+  useEscapeKey(onClose, isOpen);
 
   useEffect(() => {
     if (!isOpen) {
@@ -41,17 +44,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     }
 
     closeButtonRef.current?.focus();
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        event.preventDefault();
-        onClose();
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, onClose, triggerRef]);
+  }, [isOpen, triggerRef]);
 
   return (
     <>

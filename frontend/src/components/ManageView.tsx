@@ -1,9 +1,11 @@
-import React, { useEffect, useId, useRef } from 'react';
+import React, { useId, useRef } from 'react';
 import { Flashcard as IFlashcard } from '../types';
 import { Plus } from 'lucide-react';
 import { FlashcardSearch } from './manage/FlashcardSearch';
 import { FlashcardTable } from './manage/FlashcardTable';
 import { FlashcardForm } from './manage/FlashcardForm';
+import { useFocusTrap } from '../hooks/useFocusTrap';
+import { useEscapeKey } from '../hooks/useEscapeKey';
 
 interface ManageViewProps {
   cards: IFlashcard[];
@@ -41,43 +43,10 @@ export const ManageView: React.FC<ManageViewProps> = ({
   const dialogTitleId = useId();
   const dialogDescriptionId = useId();
   const dialogRef = useRef<HTMLDivElement>(null);
+  const isEditing = !!editingCard;
 
-  useEffect(() => {
-    if (!editingCard) {
-      return;
-    }
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        event.preventDefault();
-        onCloseEditor();
-      }
-
-      if (event.key === 'Tab' && dialogRef.current) {
-        const focusableElements = dialogRef.current.querySelectorAll<HTMLElement>(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-        );
-
-        if (focusableElements.length === 0) {
-          return;
-        }
-
-        const firstElement = focusableElements[0];
-        const lastElement = focusableElements[focusableElements.length - 1];
-
-        if (event.shiftKey && document.activeElement === firstElement) {
-          event.preventDefault();
-          lastElement.focus();
-        } else if (!event.shiftKey && document.activeElement === lastElement) {
-          event.preventDefault();
-          firstElement.focus();
-        }
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [editingCard, onCloseEditor]);
+  useEscapeKey(onCloseEditor, isEditing);
+  useFocusTrap(dialogRef, isEditing);
 
   return (
     <>

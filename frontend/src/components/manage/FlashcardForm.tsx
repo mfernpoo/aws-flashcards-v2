@@ -156,7 +156,7 @@ export const FlashcardForm: React.FC<FlashcardFormProps> = ({
           {card.id && onDelete && (
             <button
               type="button"
-              onClick={() => onDelete(card.id!)}
+              onClick={() => { if (card.id) onDelete(card.id); }}
               className="p-3 bg-red-50 text-red-500 rounded-xl hover:bg-red-100 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2"
               aria-label={`Eliminar tarjeta: ${card.front || 'sin titulo'}`}
               title="Eliminar tarjeta"

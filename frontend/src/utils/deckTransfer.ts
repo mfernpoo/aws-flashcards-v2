@@ -1,5 +1,6 @@
 import { Flashcard } from '../types';
 import { isValidSRSData } from './srs';
+import { parseTagsInput } from './tagUtils';
 
 interface JsonImportPayload {
   cards?: unknown;
@@ -11,24 +12,6 @@ const asRecord = (value: unknown): Record<string, unknown> => {
   }
 
   return {};
-};
-
-const normalizeTags = (value: unknown): string[] => {
-  if (Array.isArray(value)) {
-    return value
-      .filter((tag): tag is string => typeof tag === 'string')
-      .map((tag) => tag.trim().toLowerCase())
-      .filter(Boolean);
-  }
-
-  if (typeof value === 'string') {
-    return value
-      .split(',')
-      .map((tag) => tag.trim().toLowerCase())
-      .filter(Boolean);
-  }
-
-  return [];
 };
 
 const normalizeImportCard = (value: unknown): Partial<Flashcard> | null => {
@@ -45,7 +28,7 @@ const normalizeImportCard = (value: unknown): Partial<Flashcard> | null => {
     front,
     back,
     domain: String(record.domain ?? record.dominio ?? '').trim(),
-    tags: normalizeTags(record.tags ?? record.tag),
+    tags: parseTagsInput(record.tags ?? record.tag),
     srs: isValidSRSData(record.srs) ? record.srs : undefined,
   };
 };

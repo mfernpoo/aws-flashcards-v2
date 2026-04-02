@@ -3,10 +3,7 @@ import { Flashcard, FlashcardContent, FlashcardProgress, Grade, ImportCardsResul
 import { dbInstance } from '../utils/db';
 import { calculateNextDue, isValidSRSData, nowDay } from '../utils/srs';
 import { getCardsCollection } from '../lib/pocketbase';
-
-const normalizeTags = (tags: string[] | undefined) => {
-  return [...new Set((tags ?? []).map((tag) => tag.trim().toLowerCase()).filter(Boolean))].sort();
-};
+import { normalizeTags } from '../utils/tagUtils';
 
 const normalizeCardPayload = (card: Partial<Flashcard>) => {
   return {
