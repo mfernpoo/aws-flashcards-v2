@@ -1,7 +1,7 @@
-import React, { useId } from 'react';
+import React, { useId, useState } from 'react';
 import { Flashcard } from './Flashcard';
 import { Flashcard as IFlashcard, FlashcardFilters, Grade } from '../types';
-import { Search, Filter, RefreshCw } from 'lucide-react';
+import { Search, Filter, RefreshCw, Shuffle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface StudyViewProps {
@@ -12,9 +12,11 @@ interface StudyViewProps {
   totalStreak: number;
   filters: FlashcardFilters;
   domains: string[];
+  canSkip: boolean;
   onDomainChange: (domain: string) => void;
   onTagChange: (tag: string) => void;
   onClearFilters: () => void;
+  onSkipCard: () => void;
   onGrade: (grade: Grade) => void | Promise<void>;
 }
 
@@ -26,13 +28,16 @@ export const StudyView: React.FC<StudyViewProps> = ({
   totalStreak,
   filters,
   domains,
+  canSkip,
   onDomainChange,
   onTagChange,
   onClearFilters,
+  onSkipCard,
   onGrade,
 }) => {
   const domainFilterId = useId();
   const tagFilterId = useId();
+  const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const hasActiveFilters = Boolean(filters.domain || filters.tag);
 
   return (
@@ -46,63 +51,175 @@ export const StudyView: React.FC<StudyViewProps> = ({
         </div>
 
         <section className="bg-white border border-gray-100 rounded-2xl shadow-sm p-4" aria-label="Filtros de estudio">
-          <div className="flex items-center gap-2 mb-3 text-sm font-medium text-gray-700">
-            <Filter size={16} aria-hidden="true" className="text-gray-500" />
-            Filtrar sesión
-          </div>
-          <div className="flex flex-col lg:flex-row lg:items-end gap-3">
-            <div className="flex-1">
-              <label htmlFor={domainFilterId} className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
-                Dominio
-              </label>
-              <div className="relative">
-                <Filter size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" aria-hidden="true" />
-                <select
-                  id={domainFilterId}
-                  value={filters.domain}
-                  onChange={(event) => onDomainChange(event.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-aws-orange transition-all appearance-none"
-                >
-                  <option value="">Todos los dominios</option>
-                  {domains.map((domain) => (
-                    <option key={domain} value={domain}>
-                      {domain}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-            <div className="flex-1">
-              <label htmlFor={tagFilterId} className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
-                Tag
-              </label>
-              <div className="relative">
-                <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" aria-hidden="true" />
-                <input
-                  id={tagFilterId}
-                  type="text"
-                  placeholder="Ej: iam"
-                  value={filters.tag}
-                  onChange={(event) => onTagChange(event.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-aws-orange transition-all"
-                />
-              </div>
-            </div>
+
+          {/* ── MOBILE: fila compacta ── */}
+          <div className="flex items-center gap-2 lg:hidden">
             <button
               type="button"
-              onClick={onClearFilters}
-              className="inline-flex items-center justify-center gap-2 px-4 py-2.5 text-gray-600 hover:text-aws-orange border border-gray-200 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aws-orange focus-visible:ring-offset-2"
-              title="Limpiar filtros"
+              onClick={() => setIsFiltersOpen((o) => !o)}
+              aria-expanded={isFiltersOpen}
+              className="relative flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aws-orange focus-visible:ring-offset-2"
             >
-              <RefreshCw size={18} aria-hidden="true" />
-              Limpiar
+              <Filter size={15} aria-hidden="true" />
+              Filtros
+              {hasActiveFilters && (
+                <span
+                  className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-aws-orange rounded-full border-2 border-white"
+                  aria-label="Filtros activos"
+                />
+              )}
+            </button>
+
+            {hasActiveFilters && (
+              <button
+                type="button"
+                onClick={onClearFilters}
+                className="flex items-center gap-1.5 px-3 py-2 text-sm text-gray-600 hover:text-aws-orange border border-gray-200 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aws-orange focus-visible:ring-offset-2"
+              >
+                <RefreshCw size={14} aria-hidden="true" />
+                Limpiar
+              </button>
+            )}
+
+            <button
+              type="button"
+              onClick={onSkipCard}
+              disabled={!canSkip}
+              aria-label="Cambiar carta"
+              title="Cambiar carta"
+              className="ml-auto p-2 text-gray-500 hover:text-aws-orange border border-gray-200 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aws-orange focus-visible:ring-offset-2 disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              <Shuffle size={16} aria-hidden="true" />
             </button>
           </div>
-          <p className="text-sm text-gray-600 mt-3">
-            {hasActiveFilters
-              ? `Filtros activos: ${filters.domain || 'todos los dominios'}${filters.tag ? `, tag ${filters.tag}` : ''}.`
-              : 'No hay filtros activos en la sesión de estudio.'}
-          </p>
+
+          {/* ── MOBILE: panel colapsable ── */}
+          <AnimatePresence>
+            {isFiltersOpen && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="overflow-hidden lg:hidden"
+              >
+                <div className="flex flex-col gap-3 pt-3">
+                  <div>
+                    <label htmlFor={`${domainFilterId}-mobile`} className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+                      Dominio
+                    </label>
+                    <div className="relative">
+                      <Filter size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" aria-hidden="true" />
+                      <select
+                        id={`${domainFilterId}-mobile`}
+                        value={filters.domain}
+                        onChange={(e) => onDomainChange(e.target.value)}
+                        className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-aws-orange transition-all appearance-none"
+                      >
+                        <option value="">Todos los dominios</option>
+                        {domains.map((domain) => (
+                          <option key={domain} value={domain}>{domain}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                  <div>
+                    <label htmlFor={`${tagFilterId}-mobile`} className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+                      Tag
+                    </label>
+                    <div className="relative">
+                      <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" aria-hidden="true" />
+                      <input
+                        id={`${tagFilterId}-mobile`}
+                        type="text"
+                        placeholder="Ej: iam"
+                        value={filters.tag}
+                        onChange={(e) => onTagChange(e.target.value)}
+                        className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-aws-orange transition-all"
+                      />
+                    </div>
+                  </div>
+                  <p className="text-xs text-gray-500">
+                    {hasActiveFilters
+                      ? `Activos: ${filters.domain || 'todos los dominios'}${filters.tag ? `, #${filters.tag}` : ''}`
+                      : 'Sin filtros activos.'}
+                  </p>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* ── DESKTOP: panel completo ── */}
+          <div className="hidden lg:block">
+            <div className="flex items-center gap-2 mb-3 text-sm font-medium text-gray-700">
+              <Filter size={16} aria-hidden="true" className="text-gray-500" />
+              Filtrar sesión
+            </div>
+            <div className="flex lg:items-end gap-3">
+              <div className="flex-1">
+                <label htmlFor={domainFilterId} className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+                  Dominio
+                </label>
+                <div className="relative">
+                  <Filter size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" aria-hidden="true" />
+                  <select
+                    id={domainFilterId}
+                    value={filters.domain}
+                    onChange={(e) => onDomainChange(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-aws-orange transition-all appearance-none"
+                  >
+                    <option value="">Todos los dominios</option>
+                    {domains.map((domain) => (
+                      <option key={domain} value={domain}>{domain}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              <div className="flex-1">
+                <label htmlFor={tagFilterId} className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+                  Tag
+                </label>
+                <div className="relative">
+                  <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" aria-hidden="true" />
+                  <input
+                    id={tagFilterId}
+                    type="text"
+                    placeholder="Ej: iam"
+                    value={filters.tag}
+                    onChange={(e) => onTagChange(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-aws-orange transition-all"
+                  />
+                </div>
+              </div>
+              {hasActiveFilters && (
+                <button
+                  type="button"
+                  onClick={onClearFilters}
+                  className="inline-flex items-center justify-center gap-2 px-4 py-2.5 text-gray-600 hover:text-aws-orange border border-gray-200 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aws-orange focus-visible:ring-offset-2"
+                  title="Limpiar filtros"
+                >
+                  <RefreshCw size={18} aria-hidden="true" />
+                  Limpiar
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={onSkipCard}
+                disabled={!canSkip}
+                aria-label="Cambiar carta"
+                title="Cambiar carta"
+                className="p-2.5 text-gray-500 hover:text-aws-orange border border-gray-200 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aws-orange focus-visible:ring-offset-2 disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                <Shuffle size={18} aria-hidden="true" />
+              </button>
+            </div>
+            <p className="text-sm text-gray-600 mt-3">
+              {hasActiveFilters
+                ? `Filtros activos: ${filters.domain || 'todos los dominios'}${filters.tag ? `, tag ${filters.tag}` : ''}.`
+                : 'No hay filtros activos en la sesión de estudio.'}
+            </p>
+          </div>
+
         </section>
       </header>
 

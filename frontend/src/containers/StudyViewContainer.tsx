@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Flashcard, FlashcardFilters, Grade } from '../types';
 import { nowDay } from '../utils/srs';
 import { StudyView } from '../components/StudyView';
@@ -10,6 +10,8 @@ interface StudyViewContainerProps {
 
 export const StudyViewContainer: React.FC<StudyViewContainerProps> = ({ cards, onGrade }) => {
   const [filters, setFilters] = useState<FlashcardFilters>({ domain: '', tag: '' });
+  const [skipSeed, setSkipSeed] = useState(0);
+  const lastShownCardIdRef = useRef<string | null>(null);
 
   const domains = useMemo(
     () => Array.from(new Set(cards.map((card) => card.domain).filter(Boolean))),
@@ -37,14 +39,25 @@ export const StudyViewContainer: React.FC<StudyViewContainerProps> = ({ cards, o
   );
 
   const currentCard = useMemo(() => {
-    if (dueCards.length === 0) {
-      return null;
-    }
-
+    if (dueCards.length === 0) return null;
     const lowestBox = Math.min(...dueCards.map((card) => card.srs.box));
     const pool = dueCards.filter((card) => card.srs.box === lowestBox);
-    return pool[Math.floor(Math.random() * pool.length)];
-  }, [dueCards]);
+    // Si hay más de una carta, excluir la última mostrada para garantizar cambio
+    const candidates =
+      pool.length > 1 && lastShownCardIdRef.current
+        ? pool.filter((card) => card.id !== lastShownCardIdRef.current)
+        : pool;
+    return candidates[Math.floor(Math.random() * candidates.length)] ?? null;
+  }, [dueCards, skipSeed]); // skipSeed fuerza recompute al hacer skip
+
+  // Mantener ref sincronizada con la carta actual para el próximo skip
+  useEffect(() => {
+    lastShownCardIdRef.current = currentCard?.id ?? null;
+  }, [currentCard]);
+
+  const handleSkipCard = useCallback(() => {
+    setSkipSeed((s) => s + 1);
+  }, []);
 
   return (
     <StudyView
@@ -55,9 +68,11 @@ export const StudyViewContainer: React.FC<StudyViewContainerProps> = ({ cards, o
       totalStreak={totalStreak}
       filters={filters}
       domains={domains}
+      canSkip={dueCards.length > 1}
       onDomainChange={(domain) => setFilters((current) => ({ ...current, domain }))}
       onTagChange={(tag) => setFilters((current) => ({ ...current, tag }))}
       onClearFilters={() => setFilters({ domain: '', tag: '' })}
+      onSkipCard={handleSkipCard}
       onGrade={(grade) => (currentCard ? onGrade(currentCard, grade) : Promise.resolve())}
     />
   );
