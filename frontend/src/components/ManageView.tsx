@@ -12,14 +12,13 @@ interface ManageViewProps {
   totalCards: number;
   search: string;
   editingCard: Partial<IFlashcard> | null;
+  isSaving: boolean;
+  deletingId: string | null;
   onSearchChange: (search: string) => void;
   onCreateCard: () => void;
   onEditCard: (card: IFlashcard) => void;
   onCloseEditor: () => void;
-  onFrontChange: (front: string) => void;
-  onBackChange: (back: string) => void;
-  onDomainChange: (domain: string) => void;
-  onTagsChange: (tags: string) => void;
+  onFieldChange: (field: 'front' | 'back' | 'domain' | 'tags', value: string) => void;
   onSave: () => Promise<void>;
   onDelete: (id: string) => Promise<void>;
 }
@@ -29,14 +28,13 @@ export const ManageView: React.FC<ManageViewProps> = ({
   totalCards,
   search,
   editingCard,
+  isSaving,
+  deletingId,
   onSearchChange,
   onCreateCard,
   onEditCard,
   onCloseEditor,
-  onFrontChange,
-  onBackChange,
-  onDomainChange,
-  onTagsChange,
+  onFieldChange,
   onSave,
   onDelete,
 }) => {
@@ -69,7 +67,7 @@ export const ManageView: React.FC<ManageViewProps> = ({
         <section className="space-y-4 lg:min-h-0 lg:flex lg:flex-col" aria-label="Listado y búsqueda del mazo">
           <FlashcardSearch value={search} onChange={onSearchChange} resultCount={cards.length} />
           <div className="lg:flex-1 lg:min-h-0">
-            <FlashcardTable cards={cards} onEdit={onEditCard} onDelete={onDelete} />
+            <FlashcardTable cards={cards} deletingId={deletingId} onEdit={onEditCard} onDelete={onDelete} />
           </div>
           <p className="text-sm text-gray-600">
             {search
@@ -97,11 +95,10 @@ export const ManageView: React.FC<ManageViewProps> = ({
           >
             <FlashcardForm
               card={editingCard}
+              isSaving={isSaving}
+              deletingId={deletingId}
               onClose={onCloseEditor}
-              onFrontChange={onFrontChange}
-              onBackChange={onBackChange}
-              onDomainChange={onDomainChange}
-              onTagsChange={onTagsChange}
+              onFieldChange={onFieldChange}
               onSave={onSave}
               onDelete={onDelete}
             />

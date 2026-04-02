@@ -9,5 +9,5 @@ interface StatsViewContainerProps {
 
 export const StatsViewContainer: React.FC<StatsViewContainerProps> = ({ cards }) => {
   const stats = useMemo(() => buildDeckStats(cards), [cards]);
-  return <StatsView boxStats={stats.boxStats} progressByDomain={stats.progressByDomain} />;
+  return <StatsView boxStats={stats.boxStats} progressByDomain={stats.progressByDomain} totalCards={cards.length} />;
 };

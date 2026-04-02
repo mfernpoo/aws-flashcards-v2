@@ -4,11 +4,12 @@ import { Flashcard } from '../../types';
 
 interface FlashcardTableProps {
   cards: Flashcard[];
+  deletingId?: string | null;
   onEdit: (card: Flashcard) => void;
   onDelete: (id: string) => void;
 }
 
-export const FlashcardTable: React.FC<FlashcardTableProps> = ({ cards, onEdit, onDelete }) => {
+export const FlashcardTable: React.FC<FlashcardTableProps> = ({ cards, deletingId = null, onEdit, onDelete }) => {
   return (
     <section
       className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden flex flex-col h-full lg:min-h-0"
@@ -32,43 +33,53 @@ export const FlashcardTable: React.FC<FlashcardTableProps> = ({ cards, onEdit, o
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
-              {cards.map((card) => (
-                <tr key={card.id} className="hover:bg-aws-light/30 transition-colors">
-                  <td className="px-6 py-4">
-                    <div className="font-medium text-gray-800 line-clamp-1">{card.front}</div>
-                    <div className="text-xs text-gray-500 mt-1 flex gap-1 flex-wrap">
-                      {card.tags.map((tag) => (
-                        <span key={tag}>#{tag}</span>
-                      ))}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="px-2 py-0.5 bg-gray-100 text-gray-600 text-[10px] font-bold rounded uppercase">
-                      {card.domain || '-'}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <div className="flex justify-end gap-2">
-                      <button
-                        type="button"
-                        onClick={() => onEdit(card)}
-                        className="p-1.5 text-gray-500 hover:text-aws-blue transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aws-blue focus-visible:ring-offset-2 rounded"
-                        aria-label={`Editar tarjeta: ${card.front}`}
-                      >
-                        <Edit3 size={18} aria-hidden="true" />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => onDelete(card.id)}
-                        className="p-1.5 text-gray-500 hover:text-red-500 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2 rounded"
-                        aria-label={`Eliminar tarjeta: ${card.front}`}
-                      >
-                        <Trash2 size={18} aria-hidden="true" />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+              {cards.map((card) => {
+                const isDeleting = deletingId === card.id;
+                return (
+                  <tr key={card.id} className="hover:bg-aws-light/30 transition-colors">
+                    <td className="px-6 py-4">
+                      <div className="font-medium text-gray-800 line-clamp-1">{card.front}</div>
+                      <div className="text-xs text-gray-500 mt-1 flex gap-1 flex-wrap">
+                        {card.tags.map((tag) => (
+                          <span key={tag}>#{tag}</span>
+                        ))}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="px-2 py-0.5 bg-gray-100 text-gray-600 text-[10px] font-bold rounded uppercase">
+                        {card.domain || '-'}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <div className="flex justify-end gap-2">
+                        <button
+                          type="button"
+                          onClick={() => onEdit(card)}
+                          disabled={isDeleting}
+                          className="p-1.5 text-gray-500 hover:text-aws-blue transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aws-blue focus-visible:ring-offset-2 rounded disabled:opacity-40 disabled:cursor-not-allowed"
+                          aria-label={`Editar tarjeta: ${card.front}`}
+                        >
+                          <Edit3 size={18} aria-hidden="true" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => onDelete(card.id)}
+                          disabled={isDeleting}
+                          aria-busy={isDeleting}
+                          aria-label={`Eliminar tarjeta: ${card.front}`}
+                          className="p-1.5 text-gray-500 hover:text-red-500 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2 rounded disabled:cursor-not-allowed"
+                        >
+                          {isDeleting ? (
+                            <div className="w-[18px] h-[18px] border-2 border-red-400 border-t-transparent rounded-full animate-spin" aria-hidden="true" />
+                          ) : (
+                            <Trash2 size={18} aria-hidden="true" />
+                          )}
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         ) : (
@@ -80,52 +91,62 @@ export const FlashcardTable: React.FC<FlashcardTableProps> = ({ cards, onEdit, o
 
       <div className="lg:hidden block p-4 space-y-4 bg-gray-50/50">
         {cards.length > 0 ? (
-          cards.map((card) => (
-            <article
-              key={card.id}
-              className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex flex-col gap-3"
-            >
-              <div className="flex justify-between items-start">
-                <span className="px-2 py-1 bg-gray-100 text-gray-600 text-[10px] font-bold rounded uppercase tracking-wider">
-                  {card.domain || '-'}
-                </span>
-                <div className="flex gap-3">
-                  <button
-                    type="button"
-                    onClick={() => onEdit(card)}
-                    className="text-gray-500 hover:text-aws-blue transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aws-blue focus-visible:ring-offset-2 rounded"
-                    aria-label={`Editar tarjeta: ${card.front}`}
-                  >
-                    <Edit3 size={18} aria-hidden="true" />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => onDelete(card.id)}
-                    className="text-gray-500 hover:text-red-500 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2 rounded"
-                    aria-label={`Eliminar tarjeta: ${card.front}`}
-                  >
-                    <Trash2 size={18} aria-hidden="true" />
-                  </button>
+          cards.map((card) => {
+            const isDeleting = deletingId === card.id;
+            return (
+              <article
+                key={card.id}
+                className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex flex-col gap-3"
+              >
+                <div className="flex justify-between items-start">
+                  <span className="px-2 py-1 bg-gray-100 text-gray-600 text-[10px] font-bold rounded uppercase tracking-wider">
+                    {card.domain || '-'}
+                  </span>
+                  <div className="flex gap-3">
+                    <button
+                      type="button"
+                      onClick={() => onEdit(card)}
+                      disabled={isDeleting}
+                      className="text-gray-500 hover:text-aws-blue transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aws-blue focus-visible:ring-offset-2 rounded disabled:opacity-40 disabled:cursor-not-allowed"
+                      aria-label={`Editar tarjeta: ${card.front}`}
+                    >
+                      <Edit3 size={18} aria-hidden="true" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => onDelete(card.id)}
+                      disabled={isDeleting}
+                      aria-busy={isDeleting}
+                      aria-label={`Eliminar tarjeta: ${card.front}`}
+                      className="text-gray-500 hover:text-red-500 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2 rounded disabled:cursor-not-allowed"
+                    >
+                      {isDeleting ? (
+                        <div className="w-[18px] h-[18px] border-2 border-red-400 border-t-transparent rounded-full animate-spin" aria-hidden="true" />
+                      ) : (
+                        <Trash2 size={18} aria-hidden="true" />
+                      )}
+                    </button>
+                  </div>
                 </div>
-              </div>
 
-              <div className="font-medium text-gray-800 text-sm leading-relaxed">{card.front}</div>
+                <div className="font-medium text-gray-800 text-sm leading-relaxed">{card.front}</div>
 
-              {card.tags.length > 0 && (
-                <div className="flex flex-wrap gap-1 mt-1 pt-3 border-t border-gray-50">
-                  {card.tags.map((tag) => (
-                    <span key={tag} className="text-[10px] text-gray-500 bg-gray-50 px-1.5 py-0.5 rounded">
-                      #{tag}
-                    </span>
-                  ))}
+                {card.tags.length > 0 && (
+                  <div className="flex flex-wrap gap-1 mt-1 pt-3 border-t border-gray-50">
+                    {card.tags.map((tag) => (
+                      <span key={tag} className="text-[10px] text-gray-500 bg-gray-50 px-1.5 py-0.5 rounded">
+                        #{tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+
+                <div className="text-xs text-gray-500 pt-1">
+                  Acciones disponibles: editar o eliminar.
                 </div>
-              )}
-
-              <div className="text-xs text-gray-500 pt-1">
-                Acciones disponibles: editar o eliminar.
-              </div>
-            </article>
-          ))
+              </article>
+            );
+          })
         ) : (
           <div className="py-10 text-center text-gray-500 text-sm">
             No se encontraron cartas para los criterios actuales.

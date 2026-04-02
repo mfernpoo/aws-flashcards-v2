@@ -1,4 +1,4 @@
-import React, { useEffect, useId, useRef, useState } from 'react';
+import React, { useId, useRef } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Menu } from 'lucide-react';
 import { ConfirmDialog } from './components/ConfirmDialog';
@@ -10,7 +10,8 @@ import { StatsViewContainer } from './containers/StatsViewContainer';
 import { StudyViewContainer } from './containers/StudyViewContainer';
 import { useDeckTransfer } from './hooks/useDeckTransfer';
 import { useFlashcards } from './hooks/useFlashcards';
-import { UiNotification } from './types';
+import { useNotification } from './hooks/useNotification';
+import { useResetDialog } from './hooks/useResetDialog';
 
 function App() {
   const location = useLocation();
@@ -25,9 +26,13 @@ function App() {
     factoryReset,
   } = useFlashcards();
 
-  const [notification, setNotification] = useState<UiNotification | null>(null);
-  const [isResetDialogOpen, setIsResetDialogOpen] = useState(false);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const { notification, setNotification } = useNotification();
+  const { isResetDialogOpen, openResetDialog, closeResetDialog, handleResetConfirm } = useResetDialog({
+    factoryReset,
+    onSuccess: setNotification,
+  });
+
+  const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const importInputId = useId();
   const importDescriptionId = useId();
@@ -37,24 +42,6 @@ function App() {
     onNotify: setNotification,
   });
   const isManageRoute = location.pathname === '/manage';
-
-  useEffect(() => {
-    if (!notification) {
-      return undefined;
-    }
-
-    const timeoutId = window.setTimeout(() => {
-      setNotification(null);
-    }, 3500);
-
-    return () => window.clearTimeout(timeoutId);
-  }, [notification]);
-
-  const handleResetConfirm = async () => {
-    await factoryReset();
-    setIsResetDialogOpen(false);
-    setNotification({ type: 'success', message: 'Progreso local reiniciado.' });
-  };
 
   if (isLoading) {
     return (
@@ -81,7 +68,7 @@ function App() {
         onClose={() => setIsSidebarOpen(false)}
         onExport={exportDeck}
         onImport={requestImport}
-        onReset={() => setIsResetDialogOpen(true)}
+        onReset={openResetDialog}
         triggerRef={menuButtonRef}
         importInputId={importInputId}
         importDescriptionId={importDescriptionId}
@@ -148,7 +135,7 @@ function App() {
           message="Se perderá el progreso local actual y las cartas volverán a su estado inicial de estudio en este dispositivo."
           confirmLabel="Reiniciar progreso"
           onConfirm={handleResetConfirm}
-          onCancel={() => setIsResetDialogOpen(false)}
+          onCancel={closeResetDialog}
         />
       )}
     </div>

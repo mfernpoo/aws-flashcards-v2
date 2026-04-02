@@ -17,37 +17,50 @@ export const ManageViewContainer: React.FC<ManageViewContainerProps> = ({
 }) => {
   const [search, setSearch] = useState('');
   const [editingCard, setEditingCard] = useState<Partial<Flashcard> | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const filteredCards = useMemo(() => {
     const normalizedSearch = search.toLowerCase();
-
-    return cards.filter((card) => {
-      return (
+    return cards.filter(
+      (card) =>
         card.front.toLowerCase().includes(normalizedSearch) ||
-        card.back.toLowerCase().includes(normalizedSearch)
-      );
-    });
+        card.back.toLowerCase().includes(normalizedSearch),
+    );
   }, [cards, search]);
 
+  const handleFieldChange = (field: 'front' | 'back' | 'domain' | 'tags', value: string) => {
+    setEditingCard((current) => {
+      if (!current) return current;
+      if (field === 'tags') {
+        return { ...current, tags: value.split(',').map((t) => t.trim()).filter(Boolean) };
+      }
+      return { ...current, [field]: value };
+    });
+  };
+
   const saveCard = async () => {
-    if (!editingCard?.front || !editingCard?.back) {
-      return;
+    if (!editingCard?.front || !editingCard?.back) return;
+    setIsSaving(true);
+    try {
+      if (editingCard.id) {
+        await onUpdate(editingCard as Flashcard);
+      } else {
+        await onAdd(editingCard);
+      }
+      setEditingCard(null);
+    } finally {
+      setIsSaving(false);
     }
-
-    if (editingCard.id) {
-      await onUpdate(editingCard as Flashcard);
-    } else {
-      await onAdd(editingCard);
-    }
-
-    setEditingCard(null);
   };
 
   const deleteCard = async (id: string) => {
-    await onDelete(id);
-
-    if (editingCard?.id === id) {
-      setEditingCard(null);
+    setDeletingId(id);
+    try {
+      await onDelete(id);
+      if (editingCard?.id === id) setEditingCard(null);
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -57,26 +70,13 @@ export const ManageViewContainer: React.FC<ManageViewContainerProps> = ({
       totalCards={cards.length}
       search={search}
       editingCard={editingCard}
+      isSaving={isSaving}
+      deletingId={deletingId}
       onSearchChange={setSearch}
       onCreateCard={() => setEditingCard({ front: '', back: '', tags: [], domain: '' })}
       onEditCard={setEditingCard}
       onCloseEditor={() => setEditingCard(null)}
-      onFrontChange={(front) => setEditingCard((current) => (current ? { ...current, front } : current))}
-      onBackChange={(back) => setEditingCard((current) => (current ? { ...current, back } : current))}
-      onDomainChange={(domain) => setEditingCard((current) => (current ? { ...current, domain } : current))}
-      onTagsChange={(tags) =>
-        setEditingCard((current) =>
-          current
-            ? {
-                ...current,
-                tags: tags
-                  .split(',')
-                  .map((tag) => tag.trim())
-                  .filter(Boolean),
-              }
-            : current,
-        )
-      }
+      onFieldChange={handleFieldChange}
       onSave={saveCard}
       onDelete={deleteCard}
     />
