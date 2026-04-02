@@ -119,59 +119,66 @@ export const Flashcard: React.FC<FlashcardProps> = ({ card, onGrade }) => {
         </div>
       </div>
 
-      <div className="w-full mt-8 min-h-[5.5rem] flex items-start">
+      <div className="w-full mt-8 relative">
+        {/* Botones siempre en el DOM — su tamaño ancla la altura del contenedor */}
+        <div
+          className={cn(
+            'grid grid-cols-3 gap-2 sm:gap-4 w-full transition-opacity duration-300',
+            isFlipped ? 'opacity-100' : 'invisible opacity-0',
+          )}
+          aria-hidden={!isFlipped}
+        >
+          <button
+            ref={gradeHardButtonRef}
+            type="button"
+            onClick={(event) => {
+              event.stopPropagation();
+              void onGrade(1);
+            }}
+            tabIndex={isFlipped ? 0 : -1}
+            className="flex flex-col items-center gap-1 sm:gap-2 p-2 sm:p-4 bg-red-50 hover:bg-red-100 active:bg-red-200 text-red-700 rounded-xl transition-colors border border-red-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2"
+            aria-label="Calificar tarjeta como difícil"
+          >
+            <span className="font-bold text-sm sm:text-base">Difícil</span>
+            <span className="text-[10px] sm:text-xs opacity-70">Hoy mismo</span>
+          </button>
+          <button
+            type="button"
+            onClick={(event) => {
+              event.stopPropagation();
+              void onGrade(2);
+            }}
+            tabIndex={isFlipped ? 0 : -1}
+            className="flex flex-col items-center gap-1 sm:gap-2 p-2 sm:p-4 bg-blue-50 hover:bg-blue-100 active:bg-blue-200 text-blue-700 rounded-xl transition-colors border border-blue-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2"
+            aria-label="Calificar tarjeta como bien"
+          >
+            <span className="font-bold text-sm sm:text-base">Bien</span>
+            <span className="text-[10px] sm:text-xs opacity-70">En unos días</span>
+          </button>
+          <button
+            type="button"
+            onClick={(event) => {
+              event.stopPropagation();
+              void onGrade(3);
+            }}
+            tabIndex={isFlipped ? 0 : -1}
+            className="flex flex-col items-center gap-1 sm:gap-2 p-2 sm:p-4 bg-green-50 hover:bg-green-100 active:bg-green-200 text-green-700 rounded-xl transition-colors border border-green-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-400 focus-visible:ring-offset-2"
+            aria-label="Calificar tarjeta como fácil"
+          >
+            <span className="font-bold text-sm sm:text-base">Fácil</span>
+            <span className="text-[10px] sm:text-xs opacity-70">En 1-2 semanas</span>
+          </button>
+        </div>
+
+        {/* Placeholder superpuesto — se desvanece cuando la tarjeta se voltea */}
         <AnimatePresence>
-          {isFlipped ? (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 10 }}
-              className="grid grid-cols-3 gap-2 sm:gap-4 w-full"
-            >
-              <button
-                ref={gradeHardButtonRef}
-                type="button"
-                onClick={(event) => {
-                  event.stopPropagation();
-                  void onGrade(1);
-                }}
-                className="flex flex-col items-center gap-1 sm:gap-2 p-2 sm:p-4 bg-red-50 hover:bg-red-100 active:bg-red-200 text-red-700 rounded-xl transition-colors border border-red-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2"
-                aria-label="Calificar tarjeta como difícil"
-              >
-                <span className="font-bold text-sm sm:text-base">Difícil</span>
-                <span className="text-[10px] sm:text-xs opacity-70">Hoy mismo</span>
-              </button>
-              <button
-                type="button"
-                onClick={(event) => {
-                  event.stopPropagation();
-                  void onGrade(2);
-                }}
-                className="flex flex-col items-center gap-1 sm:gap-2 p-2 sm:p-4 bg-blue-50 hover:bg-blue-100 active:bg-blue-200 text-blue-700 rounded-xl transition-colors border border-blue-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2"
-                aria-label="Calificar tarjeta como bien"
-              >
-                <span className="font-bold text-sm sm:text-base">Bien</span>
-                <span className="text-[10px] sm:text-xs opacity-70">En unos días</span>
-              </button>
-              <button
-                type="button"
-                onClick={(event) => {
-                  event.stopPropagation();
-                  void onGrade(3);
-                }}
-                className="flex flex-col items-center gap-1 sm:gap-2 p-2 sm:p-4 bg-green-50 hover:bg-green-100 active:bg-green-200 text-green-700 rounded-xl transition-colors border border-green-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-400 focus-visible:ring-offset-2"
-                aria-label="Calificar tarjeta como fácil"
-              >
-                <span className="font-bold text-sm sm:text-base">Fácil</span>
-                <span className="text-[10px] sm:text-xs opacity-70">En 1-2 semanas</span>
-              </button>
-            </motion.div>
-          ) : (
+          {!isFlipped && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="w-full flex items-center justify-center"
+              transition={{ duration: 0.2 }}
+              className="absolute inset-0 flex items-center justify-center pointer-events-none"
               aria-hidden="true"
             >
               <div className="px-4 py-2 rounded-full bg-gray-100 text-gray-500 text-sm">
