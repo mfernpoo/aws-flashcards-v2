@@ -36,7 +36,7 @@ export const Flashcard: React.FC<FlashcardProps> = ({ card, onGrade }) => {
   }, [isFlipped, card.id]);
 
   return (
-    <div className="w-full max-w-2xl mx-auto flex flex-col items-center">
+    <div className="w-full max-w-3xl mx-auto flex flex-col items-center">
       <div className="w-full h-80 relative group">
         <div
           className={cn(
